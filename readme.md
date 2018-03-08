@@ -1,2 +1,65 @@
-# Dongguk_Gyeongju
-ë™êµ­ëŒ€í•™êµ ê²½ì£¼ìº í¼ìŠ¤
+# ÄÄÇ»ÅÍ¶õ?
+	- Á¤º¸¸¦ Ã³¸®ÇÏ´Â ±â°è
+  
+# ÇÁ·Î±×·¡¹Ö ¾ð¾î¶õ?
+	- ¸í·É¾îµéÀÇ ÁýÇÕ
+  
+# CPU
+	- ¸í·É¾î Ã³¸®¸¦ À§ÇØ¼­´Â 0°ú 1·Î º¯È¯ ÇÊ¿ä
+  
+# High level language
+	- ex) C¾ð¾î...
+  
+# Low level language
+	- Machine Language (0, 1)
+  
+# Compiler
+	- ¹ø¿ª±â [HighLevelLanguage -> LowLevelLanguage]
+  
+# Æù ³ëÀÌ¸¸ Çü ÄÄÇ»ÅÍ
+	- ¹Ýµå½Ã ¸ðµç ÇÁ·Î±×·¥Àº CPU¿¡¼­ Ã³¸®µÇ¾îÁö±â Àü¿¡ ¸ÞÀÎ ¸Þ¸ð¸®¿¡ ÀÖ¾î¾ß ÇÑ´Ù.
+	- ¿î¿µÃ¼Á¦¸¦ ºÒ·¯¿À±â À§ÇØ¼­ ¿ª½Ãµµ ¸ÞÀÎ ¸Þ¸ð¸®¿¡ ÇÁ·Î±×·¥ÀÌ ÀÖ¾î¾ß ÇÔ > ÀÌ¶§ »ç¿ëµÇ´Â °ÍÀÌ ROM.
+  
+# ROM
+	- Àü¿ø Á¾·á½Ã¿¡ ROM¿¡ ÀúÀå µÇ¾î ÀÖ´ø Á¤º¸°¡ Àü¿øÀÌ ÄÑÁü°ú µ¿½Ã¿¡ ¸ÞÀÎ ¸Þ¸ð¸®·Î ¿Å°Ü°¨.
+  
+# Instruction Cycle
+	- Instruction Fetch : ¸ÞÀÎ ¸Þ¸ð¸®¿¡ ÀúÀåµÈ Á¤º¸¸¦ CPU¿¡¼­ »ç¿ëÇÏ±â À§ÇØ ÇØµ¶(Instruction Decoding)ÇÏ±â À§ÇØ ºÒ·¯¿À´Â °Í.
+	- Instruction Decoding : ÇØµ¶
+	- Instruction Execution : CPU¿¡¼­ ³í¸®È¸·Î¸¦ ÀÌ¿ëÇÏ¿© Ã³¸®¸¦ ÇÑ´Ù.
+  
+# Compiler¿¡¼­ C¾ð¾î ÆÄÀÏÀÌ °ÅÄ¡´Â °úÁ¤
+	- '.c' >>ÄÄÆÄÀÏ>> '.obj' >>ºôµå>> 'exe'
+	- test.c : »ç¶÷¿¡°Ô Ä£¼÷ÇÑ C¾ð¾î ¹®¹ýÀ¸·Î ÀÛ¼ºµÈ ¹®¼­.
+	- test.obj
+	- test.exe : ÃÖÁ¾ÀûÀ¸·Î ¸ÞÀÎ ¸Þ¸ð¸®¿¡ µé¾î°¥ ÆÄÀÏ
+  
+# ÅëÇÕ °³¹ß È¯°æ
+	- ¿¡µðÅÍ, ÄÄÆÄÀÏ·¯, ½ÇÇà±â°¡ ¸ðµÎ ÅëÇÕµÇ¾î ÀÖ´Â ¶Ç ÇÏ³ªÀÇ °Å´ëÇÑ ÇÁ·Î±×·¥.
+
+---
+
+# °³¹ßÈ¯°æ
+	1.	Visual Studio 2015 S ¹«·á ¹öÀü ¼³Ä¡
+	1.	Win32 ÀÀ¿ë ÇÁ·Î±×·¥
+	1.	ºó ÇÁ·ÎÁ§Æ®¿¡ Ã¼Å©
+	1.	¼Ö·ç¼Ç ÀÌ¸§ ¿ìÅ¬¸¯ ÈÄ »õ Ç×¸ñ Å¬¸¯
+	1.	C++ ÆÄÀÏ »ý¼ºÀ» ÀÌ¿ëÇÏ¿© ÆÄÀÏ »ý¼º. ´Ü, È®ÀåÀÚ¸¦ '.c'·Î »ý¼ºÇØ¾ß ÇÔ¿¡ À¯ÀÇ
+
+
+---
+
+# ¼ö¾÷ Áß »ç¿ëÇÑ ÇÙ½É¿ä¼Ò
+	- `include <stdio.h>`
+	- `int main()`
+
+	- `puts()`
+	- `\n` : Line Feed - ÁÙ ¹Ù²Þ
+
+	- `int` : Á¤¼öÇü ÀÚ·áÇü > 4Bytes = 32bits = 2^32 = ¾à 40¾ï°³ÀÇ °æ¿ìÀÇ ¼ö
+
+# ¼ö¾÷ Áß »ç¿ëÇÏ¿´À¸³ª ÀÚ¼¼È÷ ¾ÈÇÏ°í ³Ñ¾î °£ °Í
+
+	- `for`¹®
+
+	- `printf()`
