@@ -1,43 +1,65 @@
-# ì»´í“¨í„°ëž€?
-  - ì •ë³´ë¥¼ ì²˜ë¦¬í•˜ëŠ” ê¸°ê³„
+# ÄÄÇ»ÅÍ¶õ?
+	- Á¤º¸¸¦ Ã³¸®ÇÏ´Â ±â°è
   
-# í”„ë¡œê·¸ëž˜ë° ì–¸ì–´ëž€?
-  - ëª…ë ¹ì–´ë“¤ì˜ ì§‘í•©
+# ÇÁ·Î±×·¡¹Ö ¾ð¾î¶õ?
+	- ¸í·É¾îµéÀÇ ÁýÇÕ
   
 # CPU
-  - ëª…ë ¹ì–´ ì²˜ë¦¬ë¥¼ ìœ„í•´ì„œëŠ” 0ê³¼ 1ë¡œ ë³€í™˜ í•„ìš”
+	- ¸í·É¾î Ã³¸®¸¦ À§ÇØ¼­´Â 0°ú 1·Î º¯È¯ ÇÊ¿ä
   
 # High level language
-  - ex) Cì–¸ì–´...
+	- ex) C¾ð¾î...
   
 # Low level language
-  - Machine Language (0, 1)
+	- Machine Language (0, 1)
   
 # Compiler
-  - ë²ˆì—­ê¸° [HighLevelLanguage -> LowLevelLanguage]
+	- ¹ø¿ª±â [HighLevelLanguage -> LowLevelLanguage]
   
-# í° ë…¸ì´ë§Œ í˜• ì»´í“¨í„°
-  - ë°˜ë“œì‹œ ëª¨ë“  í”„ë¡œê·¸ëž¨ì€ CPUì—ì„œ ì²˜ë¦¬ë˜ì–´ì§€ê¸° ì „ì— ë©”ì¸ ë©”ëª¨ë¦¬ì— ìžˆì–´ì•¼ í•œë‹¤.
-  - ìš´ì˜ì²´ì œë¥¼ ë¶ˆëŸ¬ì˜¤ê¸° ìœ„í•´ì„œ ì—­ì‹œë„ ë©”ì¸ ë©”ëª¨ë¦¬ì— í”„ë¡œê·¸ëž¨ì´ ìžˆì–´ì•¼ í•¨ > ì´ë•Œ ì‚¬ìš©ë˜ëŠ” ê²ƒì´ ROM.
+# Æù ³ëÀÌ¸¸ Çü ÄÄÇ»ÅÍ
+	- ¹Ýµå½Ã ¸ðµç ÇÁ·Î±×·¥Àº CPU¿¡¼­ Ã³¸®µÇ¾îÁö±â Àü¿¡ ¸ÞÀÎ ¸Þ¸ð¸®¿¡ ÀÖ¾î¾ß ÇÑ´Ù.
+	- ¿î¿µÃ¼Á¦¸¦ ºÒ·¯¿À±â À§ÇØ¼­ ¿ª½Ãµµ ¸ÞÀÎ ¸Þ¸ð¸®¿¡ ÇÁ·Î±×·¥ÀÌ ÀÖ¾î¾ß ÇÔ > ÀÌ¶§ »ç¿ëµÇ´Â °ÍÀÌ ROM.
   
 # ROM
-  - ì „ì› ì¢…ë£Œì‹œì— ROMì— ì €ìž¥ ë˜ì–´ ìžˆë˜ ì •ë³´ê°€ ì „ì›ì´ ì¼œì§ê³¼ ë™ì‹œì— ë©”ì¸ ë©”ëª¨ë¦¬ë¡œ ì˜®ê²¨ê°.
+	- Àü¿ø Á¾·á½Ã¿¡ ROM¿¡ ÀúÀå µÇ¾î ÀÖ´ø Á¤º¸°¡ Àü¿øÀÌ ÄÑÁü°ú µ¿½Ã¿¡ ¸ÞÀÎ ¸Þ¸ð¸®·Î ¿Å°Ü°¨.
   
 # Instruction Cycle
-  - Instruction Fetch : ë©”ì¸ ë©”ëª¨ë¦¬ì— ì €ìž¥ëœ ì •ë³´ë¥¼ CPUì—ì„œ ì‚¬ìš©í•˜ê¸° ìœ„í•´ í•´ë…(Instruction Decoding)í•˜ê¸° ìœ„í•´ ë¶ˆëŸ¬ì˜¤ëŠ” ê²ƒ.
-  - Instruction Decoding : í•´ë…
-  - Instruction Execution : CPUì—ì„œ ë…¼ë¦¬íšŒë¡œë¥¼ ì´ìš©í•˜ì—¬ ì²˜ë¦¬ë¥¼ í•œë‹¤.
+	- Instruction Fetch : ¸ÞÀÎ ¸Þ¸ð¸®¿¡ ÀúÀåµÈ Á¤º¸¸¦ CPU¿¡¼­ »ç¿ëÇÏ±â À§ÇØ ÇØµ¶(Instruction Decoding)ÇÏ±â À§ÇØ ºÒ·¯¿À´Â °Í.
+	- Instruction Decoding : ÇØµ¶
+	- Instruction Execution : CPU¿¡¼­ ³í¸®È¸·Î¸¦ ÀÌ¿ëÇÏ¿© Ã³¸®¸¦ ÇÑ´Ù.
   
-# Compilerì—ì„œ Cì–¸ì–´ íŒŒì¼ì´ ê±°ì¹˜ëŠ” ê³¼ì •
-  - test.c : ì‚¬ëžŒì—ê²Œ ì¹œìˆ™í•œ Cì–¸ì–´ ë¬¸ë²•ìœ¼ë¡œ ìž‘ì„±ëœ ë¬¸ì„œ.
-  - test.obj
-  - test.exe : ìµœì¢…ì ìœ¼ë¡œ ë©”ì¸ ë©”ëª¨ë¦¬ì— ë“¤ì–´ê°ˆ íŒŒì¼
+# Compiler¿¡¼­ C¾ð¾î ÆÄÀÏÀÌ °ÅÄ¡´Â °úÁ¤
+	- '.c' >>ÄÄÆÄÀÏ>> '.obj' >>ºôµå>> 'exe'
+	- test.c : »ç¶÷¿¡°Ô Ä£¼÷ÇÑ C¾ð¾î ¹®¹ýÀ¸·Î ÀÛ¼ºµÈ ¹®¼­.
+	- test.obj
+	- test.exe : ÃÖÁ¾ÀûÀ¸·Î ¸ÞÀÎ ¸Þ¸ð¸®¿¡ µé¾î°¥ ÆÄÀÏ
   
-# í†µí•© ê°œë°œ í™˜ê²½
-  - ì—ë””í„°, ì»´íŒŒì¼ëŸ¬, ì‹¤í–‰ê¸°ê°€ ëª¨ë‘ í†µí•©ë˜ì–´ ìžˆëŠ” ë˜ í•˜ë‚˜ì˜ ê±°ëŒ€í•œ í”„ë¡œê·¸ëž¨.
+# ÅëÇÕ °³¹ß È¯°æ
+	- ¿¡µðÅÍ, ÄÄÆÄÀÏ·¯, ½ÇÇà±â°¡ ¸ðµÎ ÅëÇÕµÇ¾î ÀÖ´Â ¶Ç ÇÏ³ªÀÇ °Å´ëÇÑ ÇÁ·Î±×·¥.
 
 ---
 
-# ê°œë°œí™˜ê²½
- Â 1. Visual Studio 2015 S ë¬´ë£Œ ë²„ì „ ì„¤ì¹˜
- Â 1. Win32 ì‘ìš© í”„ë¡œê·¸ëž¨
+# °³¹ßÈ¯°æ
+	1.	Visual Studio 2015 S ¹«·á ¹öÀü ¼³Ä¡
+	1.	Win32 ÀÀ¿ë ÇÁ·Î±×·¥
+	1.	ºó ÇÁ·ÎÁ§Æ®¿¡ Ã¼Å©
+	1.	¼Ö·ç¼Ç ÀÌ¸§ ¿ìÅ¬¸¯ ÈÄ »õ Ç×¸ñ Å¬¸¯
+	1.	C++ ÆÄÀÏ »ý¼ºÀ» ÀÌ¿ëÇÏ¿© ÆÄÀÏ »ý¼º. ´Ü, È®ÀåÀÚ¸¦ '.c'·Î »ý¼ºÇØ¾ß ÇÔ¿¡ À¯ÀÇ
+
+
+---
+
+# ¼ö¾÷ Áß »ç¿ëÇÑ ÇÙ½É¿ä¼Ò
+	- `include <stdio.h>`
+	- `int main()`
+
+	- `puts()`
+	- `\n` : Line Feed - ÁÙ ¹Ù²Þ
+
+	- `int` : Á¤¼öÇü ÀÚ·áÇü > 4Bytes = 32bits = 2^32 = ¾à 40¾ï°³ÀÇ °æ¿ìÀÇ ¼ö
+
+# ¼ö¾÷ Áß »ç¿ëÇÏ¿´À¸³ª ÀÚ¼¼È÷ ¾ÈÇÏ°í ³Ñ¾î °£ °Í
+
+	- `for`¹®
+
+	- `printf()`
