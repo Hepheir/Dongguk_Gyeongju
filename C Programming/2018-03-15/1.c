@@ -1,23 +1,23 @@
 /*
-	¼Ö·ç¼Ç / ÇÁ·ÎÁ§Æ® / ¼Ò½ºÆÄÀÏ: Ch03 / Prj01 / comments.c
-	C ÇÁ·Î±×·¥ÀÇ ±âÃÊ¸¦ ´ÙÁö±â À§ÇÑ ÁÖ¼®, ¹®Àå, Å°¿öµå µî ÀÌÇØ
+	ì†”ë£¨ì…˜ / í”„ë¡œì íŠ¸ / ì†ŒìŠ¤íŒŒì¼: Ch03 / Prj01 / comments.c
+	C í”„ë¡œê·¸ëž¨ì˜ ê¸°ì´ˆë¥¼ ë‹¤ì§€ê¸° ìœ„í•œ ì£¼ì„, ë¬¸ìž¥, í‚¤ì›Œë“œ ë“± ì´í•´
 	V 1.0 2016.
 */
 #include <stdio.h>
 
-// ¿î¿µÃ¼Á¦°¡ È£ÃâÇÏ´Â ÇÔ¼ö, ¸Å°³º¯¼ö(¾øÀ½)
-int main() {
-	puts("2Àå Ã¹ C ÇÁ·Î±×·¥!\n");
+// ìš´ì˜ì²´ì œê°€ í˜¸ì¶œí•˜ëŠ” í•¨ìˆ˜, ë§¤ê°œë³€ìˆ˜(ì—†ìŒ)
+int main(void) {
+	puts("2ìž¥ ì²« C í”„ë¡œê·¸ëž¨!\n");
 
-	printf("Å°¿öµå: int void return µî\n");
-	printf("½Ä¹úÀÚ: main puts printf µî\n");
-	printf("ºí·Ï: { ... }\n");
+	printf("í‚¤ì›Œë“œ: int void return ë“±\n");
+	printf("ì‹ë²Œìž: main puts printf ë“±\n");
+	printf("ë¸”ë¡: { ... }\n");
 
-	//ÀÎÀÚÀÎ ¹®ÀÚ¿­ ³»ºÎ´Â //ÁÖ¼®µµ ÀÏ¹Ý ¹®ÀÚ¿­·Î ÀÎ½Ä
-	printf("ÇÑ ÁÙ ÁÖ¼®: // ÀÌ ÁÙ ³¡±îÁö ÇÑ ÁÙ ÁÖ¼®ÀÔ´Ï´Ù.\n");
+	//ì¸ìžì¸ ë¬¸ìžì—´ ë‚´ë¶€ëŠ” //ì£¼ì„ë„ ì¼ë°˜ ë¬¸ìžì—´ë¡œ ì¸ì‹
+	printf("í•œ ì¤„ ì£¼ì„: // ì´ ì¤„ ëê¹Œì§€ í•œ ì¤„ ì£¼ì„ìž…ë‹ˆë‹¤.\n");
 
-	// /*ºí·Ï ÁÖ¼®*/µµ ÀÏ¹Ý ¹®ÀÚ¿­·Î ÀÎ½Ä
-	printf("ºí·Ï ÁÖ¼®: /* ¿©·¯ ÁÙ¿¡ °ÉÄ£\nºí·Ï ÁÖ¼®ÀÔ´Ï´Ù.*/ \n");
+	// /*ë¸”ë¡ ì£¼ì„*/ë„ ì¼ë°˜ ë¬¸ìžì—´ë¡œ ì¸ì‹
+	printf("ë¸”ë¡ ì£¼ì„: /* ì—¬ëŸ¬ ì¤„ì— ê±¸ì¹œ\në¸”ë¡ ì£¼ì„ìž…ë‹ˆë‹¤.*/ \n");
 	
 	return 0;
 }
