@@ -2,10 +2,19 @@
 
 int main()
 {
-	printf("화씨온도 %d는 섭씨온도로 %f입니다.\n", 10, 5.0 / 9.0 * (10 - 32.0));
-	printf("화씨온도 %d는 섭씨온도로 %f입니다.\n", 50, 5.0 / 9.0 * (50 - 32.0));
-	printf("화씨온도 %d는 섭씨온도로 %f입니다.\n", 80, 5.0 / 9.0 * (80 - 32.0));
-	printf("화씨온도 %d는 섭씨온도로 %f입니다.\n", 100, 5.0 / 9.0 * (100 - 32.0));
+	int temperature;
+
+	temperature = 10;
+	printf("화씨온도 %d는 섭씨온도로 %f입니다.\n", temperature, 5.0 / 9.0 * (temperature - 32.0));
+
+	temperature = 50;
+	printf("화씨온도 %d는 섭씨온도로 %f입니다.\n", temperature, 5.0 / 9.0 * (temperature - 32.0));
+
+	temperature = 80;
+	printf("화씨온도 %d는 섭씨온도로 %f입니다.\n", temperature, 5.0 / 9.0 * (temperature - 32.0));
+
+	temperature = 100;
+	printf("화씨온도 %d는 섭씨온도로 %f입니다.\n", temperature, 5.0 / 9.0 * (temperature - 32.0));
 
 	return 0;
 }
