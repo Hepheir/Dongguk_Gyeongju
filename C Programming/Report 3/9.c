@@ -1,4 +1,4 @@
-// CRT SECURE WARNIG
+// #define _CRT_SECURE_NO_WARNINGS_
 
 #include <stdio.h>
 
