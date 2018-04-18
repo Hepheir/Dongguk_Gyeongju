@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+<<<<<<< HEAD
 int main(void)
 {
     char gender;
@@ -49,4 +50,36 @@ int main(void)
     printf("\nBMI: %f\n", bmi);
 
     return 0;
+=======
+int main()
+{
+    float a, b, c, d, e, f, g;
+
+    printf("성별과 신장(키) 몸무게를 입력하여 주세요(남자=1, 여자=2): ");
+    scanf("%f%f%f", &a, &b, &c);
+
+    d = b * b * 22;
+    e = b * b * 21;
+    f = (c / d) * 100;
+    g = (c / f) * 100;
+
+    if(a == 1)
+    {
+        if (f > 20)
+            printf("비만");
+        else if (f > 10)
+            printf("과체중");
+        else if (f > -10)
+            printf("정상");
+    }
+    if(a == 2)
+    {
+        if (g > 20)
+            printf("비만");
+        else if (g > 10)
+            printf("과체중");
+        else if (g > -10)
+            printf("정상");
+    }
+>>>>>>> 40699bebacfefc26bf56a0b4439610a1193723a7
 }
