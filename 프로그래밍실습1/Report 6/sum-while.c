@@ -1,3 +1,5 @@
+// sum-while.c
+
 #include <stdio.h>
 
 int main(void)
