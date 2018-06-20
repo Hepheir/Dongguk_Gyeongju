@@ -19,7 +19,7 @@ void Q_444_8() {
 	///////// output /////////
 	for (i = 0; i < 10; i++)
 	{
-		printf("%2dÀº(´Â) %2d¹ø ³ª¿Ô½À´Ï´Ù. | ", i, histogram[i]);
+		printf("%2dë²ˆì€ %2dë²ˆ > ", i, histogram[i]);
 
 		for (j = 0; j < histogram[i]; j++)
 			printf("=");
