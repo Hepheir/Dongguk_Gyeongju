@@ -1,30 +1,44 @@
 /**
  * Password
- *  - main : ë©”ì¸í•¨ìˆ˜
+ *  - main : ¸ŞÀÎÇÔ¼ö
  * 
- *  - getConsoleInput : ë¬¸ìì—´ì„ ì½˜ì†”ë¡œ ë¶€í„° ì…ë ¥ë°›ì•„ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜.
- *  - parseFile : ì…ë ¥ëœ ê²½ë¡œì˜ íŒŒì¼ì„ ì—´ì–´, í•„ìš”í•œ ë¬¸ìë§Œ ê±¸ëŸ¬ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜.
- *  - checkValid : ë¬¸ìì—´ì´ ìœ íš¨í•œì§€ í™•ì¸í•˜ëŠ” í•¨ìˆ˜ (0~9)ì‚¬ì´ì˜ ë¬¸ìë§Œ ìˆëŠ”ì§€ í™•ì¸í•œë‹¤.
- *  - decrypt : ë³µí˜¸í™” í•˜ëŠ” í•¨ìˆ˜. (ì¤‘ë³µëœ ë‘ ìˆ«ìë¥¼ ì œê±°í•œë‹¤)
+ *  - getConsoleInput : ¹®ÀÚ¿­À» ÄÜ¼Ö·Î ºÎÅÍ ÀÔ·Â¹Ş¾Æ ¹İÈ¯ÇÏ´Â ÇÔ¼ö.
+ *  - parseFile : ÀÔ·ÂµÈ °æ·ÎÀÇ ÆÄÀÏÀ» ¿­¾î, ÇÊ¿äÇÑ ¹®ÀÚ¸¸ °É·¯ ¹İÈ¯ÇÏ´Â ÇÔ¼ö.
+ *  - checkValid : ¹®ÀÚ¿­ÀÌ À¯È¿ÇÑÁö È®ÀÎÇÏ´Â ÇÔ¼ö (0~9)»çÀÌÀÇ ¹®ÀÚ¸¸ ÀÖ´ÂÁö È®ÀÎÇÑ´Ù.
+ *  - decryptString : º¹È£È­ ÇÏ´Â ÇÔ¼ö. (Áßº¹µÈ µÎ ¼ıÀÚ¸¦ Á¦°ÅÇÑ´Ù)
  */
 
 import java.util.Scanner;
 import java.io.*;
 
-class Password {
+class Decrypt {
 
     public static void main(String[] args) {
 
         // String input = getConsoleInput();
         String input = parseFile("./prog_1_sample_input.txt");
 
-        String password = decrypt(input);
+        String password = decryptString(input);
 
-        System.out.println(password);
+        try {
+            Scanner sc = new Scanner(password);
+            BufferedWriter bw = new BufferedWriter(new FileWriter("./prog_1_sample_output.txt"));
+
+            while ( sc.hasNextLine() ) {
+                bw.write( sc.nextLine() );
+                bw.newLine();
+            }
+
+            bw.close();
+            sc.close();
+        }
+        catch (IOException e) {
+            System.err.println(e);
+        }
     }
 
 
-    // ë¶ˆëŸ¬ì˜¬ íŒŒì¼ì´ ë”°ë¡œ ì—†ì„ ê²½ìš°, ì½˜ì†”ì—ì„œ ì…ë ¥ ë°›ëŠ”ë‹¤.
+    // ºÒ·¯¿Ã ÆÄÀÏÀÌ µû·Î ¾øÀ» °æ¿ì, ÄÜ¼Ö¿¡¼­ ÀÔ·Â ¹Ş´Â´Ù.
     static String getConsoleInput() {
         String userInput = "";
         String line;
@@ -40,7 +54,7 @@ class Password {
 
         sc.close();
 
-        // ì…ë ¥ëœ ê°’ì´ ìœ íš¨í•œì§€ ê²€ì‚¬.
+        // ÀÔ·ÂµÈ °ªÀÌ À¯È¿ÇÑÁö °Ë»ç.
         if (checkValid(userInput) == false) {
             System.out.println("Invalid Input");
             return "";
@@ -49,7 +63,7 @@ class Password {
         return userInput;
     }
 
-    // íŒŒì¼ í•´ì„ê¸°
+    // ÆÄÀÏ ÇØ¼®±â
     static String parseFile(String path)
     {
         String userInput = "";
@@ -65,8 +79,8 @@ class Password {
                 line = sc.nextLine();
 
 
-                // ë§¤ ì¤„ë§ˆë‹¤ ì²« ê³µë°±ì´ ë‚˜ì˜¤ê¸° ì „ ê¹Œì§€ëŠ” ë¬¸ìì—´ì˜ ê¸¸ì´ê°€ ì…ë ¥ë˜ì–´ìˆìŒ.
-                // ë”°ë¼ì„œ ì…ë ¥ ë°›ì€ í–‰ì—ì„œ ê³µë°± ë’¤ë§Œ ë‚¨ê¸°ê³  ìë¦„.
+                // ¸Å ÁÙ¸¶´Ù Ã¹ °ø¹éÀÌ ³ª¿À±â Àü ±îÁö´Â ¹®ÀÚ¿­ÀÇ ±æÀÌ°¡ ÀÔ·ÂµÇ¾îÀÖÀ½.
+                // µû¶ó¼­ ÀÔ·Â ¹ŞÀº Çà¿¡¼­ °ø¹é µÚ¸¸ ³²±â°í ÀÚ¸§.
                 for (int i = 0; i < line.length(); i++)
                     if (line.charAt(i) == ' ')
                         line = line.substring(i + 1, line.length());
@@ -77,7 +91,7 @@ class Password {
 
             sc.close();
 
-            // ì…ë ¥ëœ ê°’ì´ ìœ íš¨í•œì§€ ê²€ì‚¬.
+            // ÀÔ·ÂµÈ °ªÀÌ À¯È¿ÇÑÁö °Ë»ç.
             if (checkValid(userInput) == false) {
                 System.out.println("Invalid Input");
                 return "";
@@ -90,7 +104,7 @@ class Password {
         return userInput;
     }
 
-    // ì…ë ¥ëœ ë¬¸ìì—´ì´ 0~9ì‚¬ì´ì˜ ë²ˆí˜¸ ë¬¸ìë¡œë§Œ ì´ë£¨ì–´ì¡ŒëŠ”ì§€ ê²€ì‚¬.
+    // ÀÔ·ÂµÈ ¹®ÀÚ¿­ÀÌ 0~9»çÀÌÀÇ ¹øÈ£ ¹®ÀÚ·Î¸¸ ÀÌ·ç¾îÁ³´ÂÁö °Ë»ç.
     static boolean checkValid(String password) {
         int i;
         int c;
@@ -98,7 +112,7 @@ class Password {
         for (i = 0; i < password.length(); i++) {
             c = Character.getNumericValue(password.charAt(i));
             
-            // 'ì¤„ ë°”ê¿ˆ ë¬¸ì, 0~9' ì´ì™¸ì˜ ë¬¸ì ë°œê²¬ì‹œ ë°”ë¡œ falseë¥¼ ë°˜í™˜.
+            // 'ÁÙ ¹Ù²Ş ¹®ÀÚ, 0~9' ÀÌ¿ÜÀÇ ¹®ÀÚ ¹ß°ß½Ã ¹Ù·Î false¸¦ ¹İÈ¯.
             if (password.charAt(i) == '\n')
                 continue;
 
@@ -109,19 +123,19 @@ class Password {
         return true;
     }
 
-    // ë¹„ë°€ë²ˆí˜¸ í•´ë…ê¸°.
-    static String decrypt(String userInput) {
+    // ºñ¹Ğ¹øÈ£ ÇØµ¶±â.
+    static String decryptString(String userInput) {
         int i = 0;
 
-        // `i < userInput.length() - 1`ì¸ ì´ìœ ëŠ” userInputì˜ ië²ˆê³¼ i + 1ë²ˆì˜ ë¬¸ìë¥¼ ë¹„êµí•´ì•¼ í•˜ê¸° ë•Œë¬¸.
-        // ì¸ë±ìŠ¤ ë²”ìœ„ë¥¼ ë²—ì–´ë‚˜ì§€ ì•Šë„ë¡ í•˜ë©´ì„œ ë™ì‹œì— í•„ìš”í•œ ë¶€ë¶„ë§Œ ë¹„êµ.
+        // `i < userInput.length() - 1`ÀÎ ÀÌÀ¯´Â userInputÀÇ i¹ø°ú i + 1¹øÀÇ ¹®ÀÚ¸¦ ºñ±³ÇØ¾ß ÇÏ±â ¶§¹®.
+        // ÀÎµ¦½º ¹üÀ§¸¦ ¹ş¾î³ªÁö ¾Êµµ·Ï ÇÏ¸é¼­ µ¿½Ã¿¡ ÇÊ¿äÇÑ ºÎºĞ¸¸ ºñ±³.
         while (i < userInput.length() - 1) {
-            // ì„œë¡œ ì¸ì ‘í•œ ë²ˆí˜¸ ìŒì„ ì°¾ì€ ê²½ìš°
+            // ¼­·Î ÀÎÁ¢ÇÑ ¹øÈ£ ½ÖÀ» Ã£Àº °æ¿ì
             if (userInput.charAt(i) == userInput.charAt(i + 1))
             {
                 userInput = userInput.substring(0, i) + userInput.substring(i + 2, userInput.length());
-                // ë¬¸ìì—´ì—ì„œ ì†Œê±°ëœ í›„, ì†Œê±°ëœ ë¬¸ìì™€ ì¸ì ‘í–ˆë˜ ë¬¸ìë“¤ì„ ë‹¤ì‹œ ë¹„êµí•˜ê¸° ìœ„í•´ í”¼ë²—ì„ ë’¤ë¡œ 1ì¹¸ ì˜®ê¹€.
-                // (ë‹¨, iì˜ ê°’ì´ 0 ì•„ë˜ë¡œ ê°€ì§€ ì•Šë„ë¡ í•œë‹¤.)
+                // ¹®ÀÚ¿­¿¡¼­ ¼Ò°ÅµÈ ÈÄ, ¼Ò°ÅµÈ ¹®ÀÚ¿Í ÀÎÁ¢Çß´ø ¹®ÀÚµéÀ» ´Ù½Ã ºñ±³ÇÏ±â À§ÇØ ÇÇ¹şÀ» µÚ·Î 1Ä­ ¿Å±è.
+                // (´Ü, iÀÇ °ªÀÌ 0 ¾Æ·¡·Î °¡Áö ¾Êµµ·Ï ÇÑ´Ù.)
                 if (i > 0)
                     i--;
             }
