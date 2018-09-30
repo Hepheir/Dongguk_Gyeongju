@@ -1,10 +1,44 @@
 /*
-* 5ëª…ì˜ í•™ìƒì˜ 5ê°œ êµê³¼ëª© ì„±ì  ì‚°ì¶œ í”„ë¡œê·¸ëž¨ êµ¬í˜„. í•™ìƒë³„ ì„±ì  ì´í•© ë° í‰ê· , ê³¼ëª©ë³„ ì„±ì  ì´í•© ë° í‰ê· ì„ êµ¬í•˜ì—¬ 2ì°¨ì› í˜•íƒœë¡œ ì„±ì  ê²°ê³¼ë¥¼ ì¶œë ¥.
-* ë‹¨. ì„±ì ì€ í‘œì¤€ìž…ë ¥ìž¥ì¹˜ë¡œë¶€í„° ìž…ë ¥ ë°›ëŠ” ë°©ì‹ìœ¼ë¡œ êµ¬í˜„.
+* 5¸íÀÇ ÇÐ»ýÀÇ 5°³ ±³°ú¸ñ ¼ºÀû »êÃâ ÇÁ·Î±×·¥ ±¸Çö. ÇÐ»ýº° ¼ºÀû ÃÑÇÕ ¹× Æò±Õ, °ú¸ñº° ¼ºÀû ÃÑÇÕ ¹× Æò±ÕÀ» ±¸ÇÏ¿© 2Â÷¿ø ÇüÅÂ·Î ¼ºÀû °á°ú¸¦ Ãâ·Â.
+* ´Ü. ¼ºÀûÀº Ç¥ÁØÀÔ·ÂÀåÄ¡·ÎºÎÅÍ ÀÔ·Â ¹Þ´Â ¹æ½ÄÀ¸·Î ±¸Çö.
 */
 
 #include <stdio.h>
 
-int main(void) {
-    //
+#define STUDENTS 5
+#define SUBJECTS 5
+
+int main() {
+	int i, j;
+
+	float score[STUDENTS + 2][SUBJECTS + 2] = { 0 };
+
+	for (i = 0; i < STUDENTS; i++) {
+		for (j = 0; j < SUBJECTS; j++) {
+			printf("%d¹ø ÇÐ»ý %d¹ø °ú¸ñ ¼ºÀû ÀÔ·Â : ", i + 1, j + 1);
+			scanf("%f", &score[i][j]);
+
+			score[i][SUBJECTS] += score[i][j]; // ÇÐ»ý Á¡¼ö ÇÕ°è
+		}
+
+		score[i][SUBJECTS + 1] = score[i][SUBJECTS] / SUBJECTS; // ÇÐ»ý Á¡¼ö Æò±Õ
+	}
+
+	for (j = 0; j < SUBJECTS; j++) {
+		for (i = 0; i < STUDENTS; i++) {
+			score[STUDENTS][j] += score[i][j]; // °ú¸ñ ÇÕ°è
+		}
+
+		score[STUDENTS + 1][j] = score[STUDENTS][j] / STUDENTS; // °ú¸ñ Æò±Õ
+	}
+
+	// Ãâ·Â
+
+	for (i = 0; i < STUDENTS + 2; i++) {
+		for (j = 0; j < SUBJECTS + 2; j++)
+			printf("%3.2f\t", score[i][j]);
+		puts("");
+	}
+
+	return 0;
 }
