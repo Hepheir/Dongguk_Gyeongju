@@ -21,8 +21,8 @@ int main(void) {
 
     int i, j, k;
 
-	for (i = 0; i < N; i++) {
-		for (j = 0; j < N; j++) {
+	for (i = 0; i < M; i++) {
+		for (j = 0; j < P; j++) {
 			for (k = 0; k < M && k < P; k++)
 				AB[i][j] += A[i][k] * B[k][j];
 
