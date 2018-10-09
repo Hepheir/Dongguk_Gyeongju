@@ -17,7 +17,7 @@ void Player_select();
 void Player_match();
 void Player_status();
 
-void Clear();
+void GameClear();
 void GameOver();
 
 // 기타 함수
@@ -50,7 +50,7 @@ int main(void) {
         Player_status();
 
         if (CREDIT <= 0) break;
-        if (CREDIT >= GOAL) Clear();
+        if (CREDIT >= GOAL) GameClear();
     }
 
     GameOver();
@@ -223,7 +223,7 @@ void Player_status() {
     printf("현재 승률 : %.1f%% (무승부 제외)\n", (float) WIN / (WIN + LOSE) * 100);
 }
 
-void Clear() {
+void GameClear() {
     printScr_Hr_Bold();
     puts("당신은 목표를 이루었습니다.");
     puts("당신은 부유합니다.");
