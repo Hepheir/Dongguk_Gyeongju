@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <time.h>
 
+// 처음 입력한 크레딧 금액을 LEVEL배 만큼 불리면 승리!
+#define LEVEL 20
+
 // 구분선 그리는 함수
 void printScr_Hr_Bold();
 void printScr_Hr();
@@ -14,9 +17,16 @@ void Player_select();
 void Player_match();
 void Player_status();
 
+void Clear();
 void GameOver();
 
+// 기타 함수
+
+int intpow(int, int);
+
 // 글로벌 변수
+
+int GOAL;
 
 int CREDIT;
 int BET;
@@ -40,6 +50,7 @@ int main(void) {
         Player_status();
 
         if (CREDIT <= 0) break;
+        if (CREDIT >= GOAL) Clear();
     }
 
     GameOver();
@@ -63,15 +74,23 @@ void __init__() {
     printf(">>> $");
 
     scanf("%d", &CREDIT);
+
+    printScr_Hr();
+
+    GOAL = CREDIT * LEVEL;
+    printf(" $%d 크레딧을 모으면 승리!\n", GOAL);
 }
 
 void Player_bet() {
     printScr_Hr_Bold();
 
-    puts("얼마를 배팅하시겠습니까?");
-    puts("($0을 베팅하면 종료)");
-    printf("현재 보유 크레딧 : $%d\n", CREDIT);
+    puts(" 얼마를 베팅하시겠습니까?");
+    puts(" ($0을 베팅하면 종료)");
+    printf(" 현재 보유 크레딧 : $%d/$%d\n", CREDIT, GOAL);
     puts("");
+
+    if (COMBO) printf("(연승 보너스! 승리시 받는 크레딧 x%d)\n", intpow(2 , COMBO + 1));
+
     printf(">>> $");
 
     scanf("%d", &BET);
@@ -79,9 +98,16 @@ void Player_bet() {
 
     if (CREDIT < 0) {
         CREDIT += BET;
-        puts("감당 못하실 금액을 입력하셨습니다.");
+        puts(" 감당 못하실 금액을 입력하셨습니다.");
 
         Player_bet();
+    }
+
+    if (BET < 0) {
+        printScr_Hr();
+
+        puts(" [경고] 리스크가 큰 모드입니다.");
+        puts(" 이런걸 우리는 사서 고생한다고 하지요.");
     }
 }
 
@@ -176,8 +202,10 @@ void Player_match() {
     if (MAX_COMBO < COMBO)
         MAX_COMBO = COMBO;
 
-    BET *= 1 + COMBO;
-    printf("베팅한 크레딧의 %d배인 $%d을 벌었다.\n", 1 + COMBO, BET);
+    int bonus = intpow(2, (COMBO));
+
+    BET *= bonus;
+    printf("베팅한 크레딧의 %d배인 $%d을 벌었다.\n", bonus, BET);
 
     CREDIT += BET;
 }
@@ -195,6 +223,13 @@ void Player_status() {
     printf("현재 승률 : %.1f%% (무승부 제외)\n", (float) WIN / (WIN + LOSE) * 100);
 }
 
+void Clear() {
+    printScr_Hr_Bold();
+    puts("당신은 목표를 이루었습니다.");
+    puts("당신은 부유합니다.");
+    puts("하지만 당신의 승부는 계속됩니다...");
+}
+
 void GameOver() {
     printScr_Hr_Bold();
     puts("파산하셨습니다.");
@@ -206,4 +241,13 @@ void printScr_Hr_Bold() {
 
 void printScr_Hr() {
     puts("------------------------------------");
+}
+
+int intpow(int m, int n) {
+    int sum = 1;
+
+    for (int i = 0; i < n; i++)
+        sum *= m;
+
+    return sum;
 }
