@@ -21,11 +21,9 @@ void GameClear();
 void GameOver();
 
 // 기타 함수
-
 int intpow(int, int);
 
 // 글로벌 변수
-
 int GOAL;
 
 int CREDIT;
@@ -97,6 +95,8 @@ void Player_bet() {
     CREDIT -= BET;
 
     if (CREDIT < 0) {
+        printScr_Hr();
+
         CREDIT += BET;
         puts(" 감당 못하실 금액을 입력하셨습니다.");
 
@@ -126,6 +126,8 @@ void Player_select() {
 
     // Error Handling.
     if (USER != 1 && USER != 2 && USER != 3) {
+        printScr_Hr();
+        
         puts("올바르지 않은 입력입니다!");
 
         Player_select();
