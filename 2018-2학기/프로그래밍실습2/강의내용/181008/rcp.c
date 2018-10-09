@@ -124,7 +124,7 @@ void Player_select() {
 
     scanf("%d", &USER);
 
-    // Error Handling.
+    // Exception Handling.
     if (USER != 1 && USER != 2 && USER != 3) {
         printScr_Hr();
         
