@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+// 전역변수는 따로 메모리를 관리해주기도 함
+
 // 처음 입력한 크레딧 금액을 LEVEL배 만큼 불리면 승리!
 #define LEVEL 20
 
