@@ -42,12 +42,15 @@ int main(void)
 	{
         Switch_N = keyScan();
 
-        sprintf(message, "Switch #%02X", Switch_N);
+        if (Switch_N)
+            sprintf(message, "S%02d!            ", Switch_N);
+        else
+            sprintf(message, "Nothing!");
 
-        LCD_string(0x80, "You've pressed");
+        LCD_string(0x80, "You've pressed  ");
         LCD_string(0xC0, message);
 
-		if ((Switch_N & ~0x0E) == 0) 
+		if (Switch_N == 9) 
 		{
 			for (LED_N = 2; LED_N <= 7; LED_N++) {
                 LED_ON(LED_N);
@@ -55,7 +58,7 @@ int main(void)
                 LED_OFF(LED_N);
             }
 		}
-        else if ((Switch_N & ~0x0D) == 0)
+        else if (Switch_N == 13)
         {
 			for (LED_N = 7; LED_N >= 2; LED_N--) {
                 LED_ON(LED_N);
@@ -63,17 +66,11 @@ int main(void)
                 LED_OFF(LED_N);
             }
         }
-        else if (Switch_N == 0xFF)
-        {
-            LED_ON(7);
-            Delay_ms(100);
-            LED_OFF(7);
-        }
 	}
 }
 
 unsigned char keyScan(void) {
-    unsigned char keyBuf = 0xFF;
+    unsigned char keyNum = 0;
 
     // SAVE ORIGINAL STATE
     unsigned char ddre  = DDRE;
@@ -86,45 +83,32 @@ unsigned char keyScan(void) {
                                            // SCAN DATA(OUT)
                                            // 4321 4321
     DDRE  |= 0xF0;
-    PORTE |= 0xF0;                         // 1111
+    PORTE &= 0x0F;                         // 0000
 
-    PORTE &= ~0x10;                        // 1110
-    Delay_us(5);
-    if ((PIND & 0x10) == 0) keyBuf = 0x00; //      ___0
-    if ((PIND & 0x20) == 0) keyBuf = 0x01; //      __0_
-    if ((PIND & 0x40) == 0) keyBuf = 0x02; //      _0__
-    if ((PIND & 0x80) == 0) keyBuf = 0x03; //      0___
-    PORTE |= 0x10;                         // 1111
+    unsigned char i, j;
+    for (i = 0; i < 4; i++) {
+        PORTE |= 0x10 << i;
+        Delay_us(5);
+        
+        for (j = 0; j < 4; j++)
+        {
+            if (PIND & (0x10 << j))
+            {
+                keyNum = 3 + (4 * i) + j;
 
-    PORTE &= ~0x20;                        // 1101
-    Delay_us(5);
-    if ((PIND & 0x10) == 0) keyBuf = 0x04; //      ___0
-    if ((PIND & 0x20) == 0) keyBuf = 0x05; //      __0_
-    if ((PIND & 0x40) == 0) keyBuf = 0x06; //      _0__
-    if ((PIND & 0x80) == 0) keyBuf = 0x07; //      0___
-    PORTE |= 0x20;                         // 1111
+                i = 4; // End loop
+                break;
+            }
+        }
 
-    PORTE &= ~0x40;                        // 1011
-    Delay_us(5);
-    if ((PIND & 0x10) == 0) keyBuf = 0x08; //      ___0
-    if ((PIND & 0x20) == 0) keyBuf = 0x09; //      __0_
-    if ((PIND & 0x40) == 0) keyBuf = 0x0A; //      _0__
-    if ((PIND & 0x80) == 0) keyBuf = 0x0B; //      0___
-    PORTE |= 0x40;                         // 1111
-
-    PORTE &= ~0x80;                        // 0111
-    Delay_us(5);
-    if ((PIND & 0x10) == 0) keyBuf = 0x0C; //      ___0
-    if ((PIND & 0x20) == 0) keyBuf = 0x0D; //      __0_
-    if ((PIND & 0x40) == 0) keyBuf = 0x0E; //      _0__
-    if ((PIND & 0x80) == 0) keyBuf = 0x0F; //      0___
-    PORTE |= 0x80;                         // 1111
+        PORTE &= ~i;
+    }
 
     // ROLL BACK
     DDRE  = ddre;
     PORTE = porte;
 
-    return keyBuf;
+    return keyNum;
 }
 
 void LED_ON(unsigned char i) {
