@@ -10,29 +10,26 @@ void LED_OFF(unsigned char i);
 
 int main(void)
 {
-     DDRA  = 0xFF;
-     PORTA = 0x00;             
-   					// PORTA.0 (O) : LCD DATA0
-     					// PORTA.1 (O) : LCD DATA1
-     					// PORTA.2 (O) : LCD DATA2
-     					// PORTA.3 (O) : LCD DATA3
-     					// PORTA.4 (O) : LCD DATA4
-     					// PORTA.5 (O) : LCD DATA5
-     					// PORTA.6 (O) : LCD DATA6
-     					// PORTA.7 (O) : LCD DATA7 
+    DDRA  = 0xFF;
+    PORTA = 0x00;             
+        // PORTA.0 (O) : LCD DATA0
+        //  ~
+        // PORTA.7 (O) : LCD DATA7 
     
-     DDRC  = 0xFF;  
-     PORTC = 0x00;            
-     					// PORTC.0 (O) : LCD_E
-     					// PORTC.1 (O) : LCD_RS
-     					// PORTC.2 (O)~ PORTC.7 (O) : LED
-	            		// PORTC를 모두 출력으로 설정
+    DDRC  = 0xFF;  
+    PORTC = 0x00;            
+        // PORTC.0 (O) : LCD_E
+        // PORTC.1 (O) : LCD_RS
+        // PORTC.2 (O)~ PORTC.7 (O) : LED
+        // PORTC를 모두 출력으로 설정
 
     // KEY_SCAN0이 PE4에 연결되어 있음 (출력)
     // KEY_DATA0이 PD4에 연결되어 있음 (입력)
     // KEY_DATA1이 PD5에 연결되어 있음 (입력)
 
-    char message[16];
+    char msg_1[16];
+    char msg_2[16];
+
     LCD_initialize();
 
     unsigned char LED_N = 0x00;
@@ -42,15 +39,22 @@ int main(void)
 	{
         Switch_N = keyScan();
 
+        // LCD Print message
+            sprintf(msg_1, "You've pressed  ");
+
         if (Switch_N)
-            sprintf(message, "S%02d!            ", Switch_N);
+            sprintf(msg_2, "S%02d!          ", Switch_N);
         else
-            sprintf(message, "Nothing!");
+            sprintf(msg_2, "Nothing!        ");
+        
+            
+        LCD_string(0x80, msg_1);
+        LCD_string(0xC0, msg_2);
 
-        LCD_string(0x80, "You've pressed  ");
-        LCD_string(0xC0, message);
 
-		if (Switch_N == 9) 
+        // Switch Actions
+        
+		if (Switch_N == 9) // S9 : 5
 		{
 			for (LED_N = 2; LED_N <= 7; LED_N++) {
                 LED_ON(LED_N);
@@ -58,7 +62,7 @@ int main(void)
                 LED_OFF(LED_N);
             }
 		}
-        else if (Switch_N == 13)
+        else if (Switch_N == 13) // S13 : 8
         {
 			for (LED_N = 7; LED_N >= 2; LED_N--) {
                 LED_ON(LED_N);
@@ -80,10 +84,8 @@ unsigned char keyScan(void) {
     // PORT* : 핀을 출력용으로 사용할 때 출력값을 쓰는 레지스터 (0 = 출력안함, 1 = 출력함)
     // PIN*  : 핀을 입력용으로 사용할 때 입력값을 받는 레지스터
 
-                                           // SCAN DATA(OUT)
-                                           // 4321 4321
     DDRE  |= 0xF0;
-    PORTE &= 0x0F;                         // 0000
+    PORTE &= 0x0F;
 
     unsigned char i, j;
     for (i = 0; i < 4; i++) {
