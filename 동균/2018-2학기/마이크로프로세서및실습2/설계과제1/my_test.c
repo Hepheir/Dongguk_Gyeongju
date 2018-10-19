@@ -1,4 +1,3 @@
-#include <stdbool.h>
 #include <avr/io.h>
 #include <stdio.h>
 #include "my_atmega128.h"
