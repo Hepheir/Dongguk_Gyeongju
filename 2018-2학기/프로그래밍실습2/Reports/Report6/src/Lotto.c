@@ -25,7 +25,7 @@ int main(void) {
         autoGenerate(HOST);
         getGradeOf(USER);
 
-        printf("ê³„ì†í•˜ì‹œê² ìŠµë‹ˆê¹Œ? (y/n) : ");
+        printf("°è¼ÓÇÏ½Ã°Ú½À´Ï±î? (y/n) : ");
         scanf(" %c", &sel);
 
         if (sel == 'n')
@@ -66,10 +66,10 @@ bool hasElement(int array[], int length, int item) {
     return false;
 }
 
-// ê²Œì„ íë¦„ ì œì–´
+// °ÔÀÓ Èå¸§ Á¦¾î
 
 void buyLottery(int Lottery[]) {
-    puts("ë³µê¶Œì„ êµ¬ì…í•©ë‹ˆë‹¤. (0ì„ ì…ë ¥í•˜ë©´ ìë™ìƒì„±)");
+    puts("º¹±ÇÀ» ±¸ÀÔÇÕ´Ï´Ù. (0À» ÀÔ·ÂÇÏ¸é ÀÚµ¿»ı¼º)");
     for (int i = 0; i < 6; i++) {
         printf("  [%d] : ", i + 1);
         scanf("%d", &Lottery[i]);
@@ -80,19 +80,19 @@ void buyLottery(int Lottery[]) {
         }
 
         if (Lottery[i] < 1 || Lottery[i] > 45) {
-            puts("ì˜ëª»ëœ ì…ë ¥ì…ë‹ˆë‹¤.");
+            puts("Àß¸øµÈ ÀÔ·ÂÀÔ´Ï´Ù.");
             i--;
             continue;
         }
 
         if (hasElement(Lottery, i, Lottery[i])) {
-            puts("ì¤‘ë³µëœ ì…ë ¥ì…ë‹ˆë‹¤.");
+            puts("Áßº¹µÈ ÀÔ·ÂÀÔ´Ï´Ù.");
             i--;
             continue;
         }
     }
     
-    printf("êµ¬ì…í•œ ë³µê¶Œë²ˆí˜¸\t: ");
+    printf("±¸ÀÔÇÑ º¹±Ç¹øÈ£\t: ");
     for (int i = 0; i < 6; i++) {
         printf("[%2d] ", USER[i]);
     }
@@ -102,7 +102,7 @@ void buyLottery(int Lottery[]) {
 void getGradeOf(int Lottery[]) {
     int matches = 0;
     
-    printf("ì´ë²ˆíšŒ ë‹¹ì²¨ë²ˆí˜¸\t: ");
+    printf("ÀÌ¹øÈ¸ ´çÃ·¹øÈ£\t: ");
     for (int i = 0; i < 6; i++) {
         printf("[%2d] ", HOST[i]);
 
@@ -117,37 +117,37 @@ void getGradeOf(int Lottery[]) {
     }
     puts("\n");
 
-    long CREDIT;
+    long unsigned int CREDIT;
 
-    printf("ë¬´ë ¤ %dê°œë‚˜ ë§ì¶”ì…¨êµ°ìš”!\n", matches);
-    printf("ì¶•í•˜ë“œë¦½ë‹ˆë‹¤, ");
+    printf("¹«·Á %d°³³ª ¸ÂÃß¼Ì±º¿ä!\n", matches);
+    printf("ÃàÇÏµå¸³´Ï´Ù, ");
     switch (matches)
     {
-        case 6: // 1ë“±
-            puts("1ë“±ì…ë‹ˆë‹¤.");
-            CREDIT = LOTTERY_COST * (long) 8145060;
+        case 6: // 1µî
+            puts("1µîÀÔ´Ï´Ù.");
+            CREDIT = LOTTERY_COST * (long unsigned int) 8145060;
             break;
 
-        case 5: // 2ë“±
-            puts("2ë“±ì…ë‹ˆë‹¤.");
-            CREDIT = LOTTERY_COST * 35724;
+        case 5: // 2µî
+            puts("2µîÀÔ´Ï´Ù.");
+            CREDIT = LOTTERY_COST * (long unsigned int) 35724;
             break;
 
-        case 4: // 3ë“±
-            puts("3ë“±ì…ë‹ˆë‹¤.");
+        case 4: // 3µî
+            puts("3µîÀÔ´Ï´Ù.");
             CREDIT = LOTTERY_COST * 733;
             break;
 
-        case 3: // 4ë“±
-            puts("4ë“±ì…ë‹ˆë‹¤.");
+        case 3: // 4µî
+            puts("4µîÀÔ´Ï´Ù.");
             CREDIT = LOTTERY_COST * 45;
             break;
     
         default:
-            puts("ê½ì…ë‹ˆë‹¤.");
+            puts("²ÎÀÔ´Ï´Ù.");
             CREDIT = 0;
             break;
     }  
-    printf("ë‹¹ì²¨ê¸ˆì€ %ldW ì…ë‹ˆë‹¤!\n", CREDIT);
+    printf("´çÃ·±İÀº %ldW ÀÔ´Ï´Ù!\n", CREDIT);
     puts("");
 }
