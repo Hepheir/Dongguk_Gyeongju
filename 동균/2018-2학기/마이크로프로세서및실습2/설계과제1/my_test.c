@@ -20,10 +20,10 @@ int main(void)
 
     LCD_initialize();
 
-    unsigned char LED_N;
     unsigned char Switch_N;
 
     unsigned char Flipflop = 0;
+    unsigned char i;
 
 	while(1)
 	{
@@ -43,55 +43,152 @@ int main(void)
 
         // Switch Actions
 
+        // Wave upward
 		if (Switch_N == 9) // S9 : 5
 		{
-			for (LED_N = 7; LED_N >= 2; LED_N--) {
-                LED_ON(LED_N);
+			for (i = 7; i >= 2; i--) {
+                LED_ON(i);
                 Delay_ms(100);
-                LED_OFF(LED_N);
+                LED_OFF(i);
             }
+
+            Flipflop = ~0;
 		}
-        else if (Switch_N == 13) // S13 : 8
+        // Wave downward
+        if (Switch_N == 13) // S13 : 8
         {
-			for (LED_N = 2; LED_N <= 7; LED_N++) {
-                LED_ON(LED_N);
+			for (i = 2; i <= 7; i++) {
+                LED_ON(i);
                 Delay_ms(100);
-                LED_OFF(LED_N);
+                LED_OFF(i);
+            }
+
+            Flipflop = ~0;
+        }
+        // LED Turn on 2~7
+        for (i = 3; i <= 8; i++)
+        {
+            if (Switch_N == i)
+            {
+                LED_ON(i - 1);
+                Delay_ms(100);
+                LED_OFF(i - 1);
             }
         }
-        else if (Switch_N == 3) // S3 : F1
+        // Print Dongjoo
+        if (Switch_N == 10)
         {
-			for (LED_N = 2; LED_N <= 7; LED_N++)
-                LED_ON(LED_N);
+            sprintf(msg_1, "Hepheir @ Gmail ");
+            sprintf(msg_2, "2018212236      ");
+        
+            LCD_string(0x80, msg_1);
+            LCD_string(0xC0, msg_2);
+
+			for (i = 2; i <= 7; i++)
+                LED_ON(i);
             Delay_ms(100);
-			for (LED_N = 2; LED_N <= 7; LED_N++)
-                LED_OFF(LED_N);
+			for (i = 2; i <= 7; i++)
+                LED_OFF(i);
+            Delay_ms(100);
+
+            Flipflop = ~0;
         }
-        else if (Switch_N == 18) // S18 : #
+        // Curtain Close
+        if (Switch_N == 11)
         {
-			for (LED_N = 2; LED_N <= 7; LED_N+=2) {
-                LED_ON(LED_N);
-                LED_OFF(LED_N + 1);
+			for (i = 0; i <= 2; i++) {
+                LED_ON(2 + i);
+                LED_ON(7 - i);
+                Delay_ms(100);
             }
-            Delay_ms(250);
-			for (LED_N = 2; LED_N <= 7; LED_N+=2) {
-                LED_OFF(LED_N);
-                LED_ON(LED_N + 1);
-            }
-            Delay_ms(250);
-            for (LED_N = 2; LED_N <= 7; LED_N++)
-                LED_OFF(LED_N);
+
+            Flipflop = 0;
         }
-        else if (Switch_N == 4) {
-            if (Flipflop) {
-                for (LED_N = 2; LED_N <= 7; LED_N++)
-                    LED_ON(LED_N);
-            } else {
-                for (LED_N = 2; LED_N <= 7; LED_N++)
-                    LED_OFF(LED_N);
+        // Curtain Open
+        if (Switch_N == 12)
+        {
+			for (i = 3; i >= 1; i--) {
+                LED_OFF(2 + (i - 1));
+                LED_OFF(7 - (i - 1));
+                Delay_ms(100);
             }
-            Flipflop = ~Flipflop;
+
+            Flipflop = ~0;
+        }
+        // Print Dolyok
+        if (Switch_N == 14)
+        {
+            sprintf(msg_1, "DOL YOK is kawai");
+            sprintf(msg_2, "Yee~~~ Bob-O!   ");
+        
+            LCD_string(0x80, msg_1);
+            LCD_string(0xC0, msg_2);
+
+			for (i = 2; i <= 7; i++)
+                LED_ON(i);
+            Delay_ms(250);
+			for (i = 2; i <= 7; i++)
+                LED_OFF(i);
+            Delay_ms(250);
+
+            Flipflop = ~0;
+        }
+        // Hold all
+        if (Switch_N == 15)
+        {
+			for (i = 2; i <= 7; i++)
+                LED_ON(i);
+            Delay_ms(100);
+			for (i = 2; i <= 7; i++)
+                LED_OFF(i);
+
+            Flipflop = ~0;
+        }
+        // Flip flop
+        if (Switch_N == 16) {
+            if (Flipflop) {
+                for (i = 2; i <= 7; i++)
+                    LED_ON(i);
+            } else {
+                for (i = 2; i <= 7; i++)
+                    LED_OFF(i);
+            }
             Delay_ms(500);
+
+            Flipflop = ~Flipflop;
+        }
+        // Climb up & down
+        if (Switch_N == 17)
+        {
+			for (i = 7; i >= 2; i--) {
+                LED_ON(i);
+                Delay_ms(100);
+            }
+			for (i = 2; i <= 7; i++) {
+                LED_OFF(i);
+                Delay_ms(100);
+            }
+
+            Flipflop = ~0;
+        }
+        // Zigzag
+        if (Switch_N == 18)
+        {
+			for (i = 2; i <= 7; i+=2) {
+                LED_ON(i);
+                LED_OFF(i + 1);
+            }
+            Delay_ms(250);
+			for (i = 2; i <= 7; i+=2) {
+                LED_OFF(i);
+                LED_ON(i + 1);
+            }
+            Delay_ms(250);
+
+            for (i = 2; i <= 7; i++)
+                LED_OFF(i);
+
+            Flipflop = ~0;
         }
 	}
 }
