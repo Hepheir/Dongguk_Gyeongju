@@ -123,7 +123,7 @@ void getGradeOf(int Lottery[]) {
         }
     }
     if (BONUS_MODE) {
-        printf("[%2d]", HOST[6]);
+        printf("+ [%2d]", HOST[6]);
 
         for (int i = 0; i < 6; i++)
             if (HOST[6] == Lottery[i]) {
