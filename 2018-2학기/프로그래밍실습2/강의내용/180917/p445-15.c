@@ -40,9 +40,9 @@ int main() {
 
 	int n, r;
 
-	for (n = 0; n < SIZE; n++) {
+	for (n = 0; n < 10; n++) {
 		for (r = 0; r <= n; r++) {
-			pascal[n][r] = combination(n, r)
+			pascal[n][r] = combination(n, r);
 			printf("%4d", pascal[n][r]);
 		}
 		puts("");

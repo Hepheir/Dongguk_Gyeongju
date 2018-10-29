@@ -43,7 +43,6 @@ int isEqualArray(int a[], int b[], int n) {
         if (a[i] != b[i])
             return 0;
     }
-
     return 1;
 }
 
