@@ -2,6 +2,8 @@
 #include <math.h>
 #include <stdio.h>
 
+#define PI 3.14F
+
 HWND hwnd;
 HDC hdc;
 double rad(double degree) // 도를 라디안으로 변환
