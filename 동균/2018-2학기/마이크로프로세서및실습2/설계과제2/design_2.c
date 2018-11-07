@@ -49,9 +49,8 @@ int main(void)
         // Switch Actions
 
 		if (Switch_N == 3) // S3 : KEY_F1
-        {
             ADC_active = true;
-        }
+        
         if (Switch_N == 7) // S7 : KEY_F2
         {
             ADC_active = false;
@@ -59,7 +58,14 @@ int main(void)
 
             for (i = 2; i <= 7; i++)
                 LED_OFF(i);
+
+            sprintf(msg_1, "                  ");
+            sprintf(msg_2, "                  ");
         }
+        
+        // Print on LCD
+        LCD_string(0x80, msg_1);
+        LCD_string(0xC0, msg_2);
 
         if (!ADC_active) continue;
 
@@ -100,12 +106,9 @@ int main(void)
 
         voltage = V_R2 - V_R1; // voltage에 두 저항의 전위차를 구하여 저장
 
-        // Print on LCD
+        // Print result on LCD
         sprintf(msg_1, "%.2lf[V], %.2lf[V]", V_R1, V_R2);
         sprintf(msg_2, "V2-V1: %.3lf[V]", voltage);
-        
-        LCD_string(0x80, msg_1);
-        LCD_string(0xC0, msg_2);
 
         // LED Control
         if (voltage > 2)
