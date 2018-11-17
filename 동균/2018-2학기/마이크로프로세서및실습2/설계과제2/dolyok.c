@@ -21,7 +21,6 @@ int main(void)
 
 
     int ADC_start;
-    unsigned int ADCVAL;
     ADC_start = 0;
     char msg_1[16];
     char msg_2[16];
