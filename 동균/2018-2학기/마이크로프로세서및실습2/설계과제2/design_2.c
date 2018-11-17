@@ -5,7 +5,8 @@
 #include "my_LCD.h"
 
 unsigned char keyScan(void);
-double volt_of_varResistor(unsigned char resistor_Num);
+unsigned short resistorScan(unsigned char i);
+double ADC_to_voltage(unsigned short _ADC);
 void LED_ON(unsigned char i);
 void LED_OFF(unsigned char i);
 
@@ -26,21 +27,14 @@ int main(void)
 
     LCD_initialize();
 
-
-    // Dynamic Resistor Init
-
-    unsigned char enabled_Resister = 0x00;
-    ADMUX = enabled_Resister;
-
     // Variables
 
     unsigned char Switch_N;
-    unsigned char VResistor_N = 2;
 
     bool ADC_active = false;
-
     double V_R1 = 0;
     double V_R2 = 0;
+    double dV;
 
     unsigned char i;
 
@@ -51,8 +45,9 @@ int main(void)
         // Switch Actions
 
 		if (Switch_N == 3) // S3 : KEY_F1
+        {
             ADC_active = true;
-        
+        }
         if (Switch_N == 7) // S7 : KEY_F2
         {
             ADC_active = false;
@@ -60,14 +55,7 @@ int main(void)
 
             for (i = 2; i <= 7; i++)
                 LED_OFF(i);
-
-            sprintf(msg_1, "                  ");
-            sprintf(msg_2, "                  ");
         }
-        
-        // Print on LCD
-        LCD_string(0x80, msg_1);
-        LCD_string(0xC0, msg_2);
 
         if (!ADC_active) continue;
 
@@ -80,27 +68,20 @@ int main(void)
         * 동시에 두 가변저항의 값을 확인하는 것 처럼 보임.
         */
 
-        if (VResistor_N == 1)
-        { // R1 Selected
-            V_R1 = volt_of_varResistor(1);
+        V_R1 = ADC_to_voltage(resistorScan(1)); // VR1 Scan
+        V_R2 = ADC_to_voltage(resistorScan(2)); // VR2 Scan
 
-            Delay_ms(5);
-            VResistor_N = 2;
-        }
-        else if (VResistor_N == 2)
-        { // R2 Selected
-            V_R2 = volt_of_varResistor(2);
-            
-            Delay_ms(5);
-            VResistor_N = 1;
-        }
+        dV = V_R2 - V_R1; // 두 저항의 전위차를 구하여 저장
 
         // Print on LCD
         sprintf(msg_1, "%.2lf[V], %.2lf[V]", V_R1, V_R2);
-        sprintf(msg_2, "V2-V1: %.3lf[V]", (V_R2 - V_R1));
+        sprintf(msg_2, "V2-V1: %.3lf[V]", dV);
+        
+        LCD_string(0x80, msg_1);
+        LCD_string(0xC0, msg_2);
 
         // LED Control
-        if (V_R2 - V_R1 > 2)
+        if (dV > 2)
             for (i = 2; i <= 7; i++)
                 LED_ON(i);
 
@@ -152,39 +133,39 @@ unsigned char keyScan(void) {
     return keyNum;
 }
 
-double volt_of_varResistor(unsigned char resistor_Num) {
-    double voltage;
-
-    Delay_ms(5);
-
-    if (resistor_Num == 1)
-        ADMUX = 0x00;
-    else if (resistor_Num == 2)
-        ADMUX = 0x01;
+unsigned short resistorScan(unsigned char i) {
+    if (i == 1) {
+        ADMUX = 0x00; // VR1
+    }
+    else if (i == 2) {
+        ADMUX = 0x01; // VR2
+    }
     else
-        return 0;
+        return 0x0000;
 
     // AD converter 활성화, 변환동작 시작, Free running mode
     // ,인터럽트 사용안함, ADC 클럭을 128분주	
     ADCSRA = 0xF7;
-
     Delay_ms(5);
 
-    // Wait until AD conversion ends
+    // AD conversion이 완료 되기까지 대기 (폴링 방식)
     while((ADCSRA & 0x10) == 0);
 
+    // AD conversion이 완료를 나타내는 비트를 clear
     ADCSRA |= 0x10;
-
-    // 5V 에서의 ADC값이 십진수로 1023, 이진수로 11 1111 1111 이므로
-    voltage = (ADC / (float) 0x3FF) * 5; // voltage에 ADC에 저장된 전압 값을 넣음
-
-    return voltage;
+    
+    return ADC;
 }
 
-void LED_ON(unsigned char LED_Num) {
-	PORTC |= (1 << LED_Num);
+double ADC_to_voltage(unsigned short _ADC) {
+    // 5V 에서의 ADC값이 십진수로 1023, 이진수로 11 1111 1111이므로
+    return (_ADC / (double) 0x3FF) * 5;
 }
 
-void LED_OFF(unsigned char LED_Num) {
-	PORTC &= ~(1 << LED_Num);
+void LED_ON(unsigned char i) {
+	PORTC |= (1 << i);
+}
+
+void LED_OFF(unsigned char i) {
+	PORTC &= ~(1 << i);
 }
