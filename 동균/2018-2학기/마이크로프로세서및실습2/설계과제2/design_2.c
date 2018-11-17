@@ -52,6 +52,9 @@ int main(void)
         {
             ADC_active = false;
             ADCSRA &= ~(1<<7); // AD converter 비활성화
+        
+            LCD_string(0x80, "                ");
+            LCD_string(0xC0, "                ");
 
             for (i = 2; i <= 7; i++)
                 LED_OFF(i);
