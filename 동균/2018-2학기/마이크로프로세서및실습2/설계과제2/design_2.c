@@ -1,5 +1,6 @@
 #include <avr/io.h>
 #include <stdio.h>
+#include <math.h>
 #include <stdbool.h>
 #include "my_atmega128.h"
 #include "my_LCD.h"
@@ -74,11 +75,11 @@ int main(void)
         V_R1 = ADC_to_voltage(resistorScan(1)); // VR1 Scan
         V_R2 = ADC_to_voltage(resistorScan(2)); // VR2 Scan
 
-        dV = V_R2 - V_R1; // 두 저항의 전위차를 구하여 저장
+        dV = fabs(V_R2 - V_R1); // 두 저항의 전위차를 구하여 저장
 
         // Print on LCD
-        sprintf(msg_1, "%.2lf[V], %.2lf[V]", V_R1, V_R2);
-        sprintf(msg_2, "V2-V1: %.3lf[V]", dV);
+        sprintf(msg_1, "%3.2lf[V], %3.2lf[V]", V_R1, V_R2);
+        sprintf(msg_2, "|V2-V1|: %3.2lf[V]", dV);
         
         LCD_string(0x80, msg_1);
         LCD_string(0xC0, msg_2);
