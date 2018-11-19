@@ -34,6 +34,7 @@ int main(void)
 
     for (i = 0; i < 20; i++)
     {
+        clear_screen();
         car1_dist += rand() % 100;
         car2_dist += rand() % 100;
         car3_dist += rand() % 100;
