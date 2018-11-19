@@ -1,10 +1,13 @@
 #include <avr/io.h>
 #include <stdio.h>
+#include <math.h>
 #include <stdbool.h>
 #include "my_atmega128.h"
 #include "my_LCD.h"
 
 unsigned char keyScan(void);
+unsigned short resistorScan(unsigned char i);
+double ADC_to_voltage(unsigned short _ADC);
 void LED_ON(unsigned char i);
 void LED_OFF(unsigned char i);
 
@@ -25,12 +28,6 @@ int main(void)
 
     LCD_initialize();
 
-
-    // Dynamic Resistor Init
-
-    unsigned char enabled_Resister = 0x00;
-    ADMUX = enabled_Resister;
-
     // Variables
 
     unsigned char Switch_N;
@@ -38,9 +35,9 @@ int main(void)
     bool ADC_active = false;
     double V_R1 = 0;
     double V_R2 = 0;
+    double dV;
 
     unsigned char i;
-    double voltage;
 
 	while (1)
 	{
@@ -49,23 +46,20 @@ int main(void)
         // Switch Actions
 
 		if (Switch_N == 3) // S3 : KEY_F1
+        {
             ADC_active = true;
-        
+        }
         if (Switch_N == 7) // S7 : KEY_F2
         {
             ADC_active = false;
             ADCSRA &= ~(1<<7); // AD converter 비활성화
+        
+            LCD_string(0x80, "                ");
+            LCD_string(0xC0, "                ");
 
             for (i = 2; i <= 7; i++)
                 LED_OFF(i);
-
-            sprintf(msg_1, "                  ");
-            sprintf(msg_2, "                  ");
         }
-        
-        // Print on LCD
-        LCD_string(0x80, msg_1);
-        LCD_string(0xC0, msg_2);
 
         if (!ADC_active) continue;
 
@@ -78,40 +72,20 @@ int main(void)
         * 동시에 두 가변저항의 값을 확인하는 것 처럼 보임.
         */
 
-        Delay_ms(5);
-        if (enabled_Resister && 0x01)
-            enabled_Resister = 0x00; // Enable Dynamic R1
-        else
-            enabled_Resister = 0x01; // Enable Dynamic R2
+        V_R1 = ADC_to_voltage(resistorScan(1)); // VR1 Scan
+        V_R2 = ADC_to_voltage(resistorScan(2)); // VR2 Scan
 
-        ADMUX = enabled_Resister;
+        dV = fabs(V_R2 - V_R1); // 두 저항의 전위차를 구하여 저장
 
-        // AD converter 활성화, 변환동작 시작, Free running mode
-        // ,인터럽트 사용안함, ADC 클럭을 128분주	
-        ADCSRA = 0xF7;
-        Delay_ms(5);
-
-        // Wait until AD conversion ends
-        while((ADCSRA & 0x10) == 0);
-
-        ADCSRA |= 0x10;
-
-        // 5V 에서의 ADC값이 십진수로 1023, 이진수로 11 1111 1111이므로
-        voltage = (ADC / (float) 0x3FF) * 5; // voltage에 ADC에 저장된 전압 값을 넣음
-
-        if (enabled_Resister && 0x01)
-            V_R2 = voltage; // on Dynamic R2 Enabled
-        else
-            V_R1 = voltage; // on Dynamic R1 Enabled
-
-        voltage = V_R2 - V_R1; // voltage에 두 저항의 전위차를 구하여 저장
-
-        // Print result on LCD
-        sprintf(msg_1, "%.2lf[V], %.2lf[V]", V_R1, V_R2);
-        sprintf(msg_2, "V2-V1: %.3lf[V]", voltage);
+        // Print on LCD
+        sprintf(msg_1, "%3.2lf[V], %3.2lf[V]", V_R1, V_R2);
+        sprintf(msg_2, "|V2-V1|: %3.2lf[V]", dV);
+        
+        LCD_string(0x80, msg_1);
+        LCD_string(0xC0, msg_2);
 
         // LED Control
-        if (voltage > 2)
+        if (dV > 2)
             for (i = 2; i <= 7; i++)
                 LED_ON(i);
 
@@ -161,6 +135,35 @@ unsigned char keyScan(void) {
     PORTE = porte;
 
     return keyNum;
+}
+
+unsigned short resistorScan(unsigned char i) {
+    if (i == 1) {
+        ADMUX = 0x00; // VR1
+    }
+    else if (i == 2) {
+        ADMUX = 0x01; // VR2
+    }
+    else
+        return 0x0000;
+
+    // AD converter 활성화, 변환동작 시작, Free running mode
+    // ,인터럽트 사용안함, ADC 클럭을 128분주	
+    ADCSRA = 0xF7;
+    Delay_ms(5);
+
+    // AD conversion이 완료 되기까지 대기 (폴링 방식)
+    while((ADCSRA & 0x10) == 0);
+
+    // AD conversion이 완료를 나타내는 비트를 clear
+    ADCSRA |= 0x10;
+    
+    return ADC;
+}
+
+double ADC_to_voltage(unsigned short _ADC) {
+    // 5V 에서의 ADC값이 십진수로 1023, 이진수로 11 1111 1111이므로
+    return (_ADC / (double) 0x3FF) * 5;
 }
 
 void LED_ON(unsigned char i) {
