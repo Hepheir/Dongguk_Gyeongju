@@ -6,7 +6,12 @@ import math
 isMacOS = True
 isDebug = True
 
-MAX_ERROR_RATE = 0.00001
+MAX_ERROR_RATE = 6.2
+
+DEBUG_min_error_rate2 = 10000
+DEBUG_min_error_rate = 10000
+
+TEMPLATE_MAP = []
 
 def printImgInit():
     global window, canvas
@@ -67,7 +72,6 @@ def scanTemplate():
         printImg(scr)
 
     founds = 0 # debug
-    minEr = 10000 # debug
     
     # Screen이 너무 넓어 스캔과정이 오래 걸리기에 일시적으로 스캔 영역을 제한하여둠
     for scrX in range(17, 521): # scr.width
@@ -82,13 +86,9 @@ def scanTemplate():
 
             # printImg(part)
 
-            debugEr = compSimImage(part, BLANK)
-            if minEr > debugEr:
-                minEr = debugEr
-
-            # if compSimImage(part, BLANK):
-            #     print("Found!")
-            #     founds += 1
+            if compSimImage(part, BLANK):
+                TEMPLATE_MAP.append((scrX, scrY))
+                founds += 1
 
             # Print scanning progress state.
             progress =  (scrX * scr.height + scrY) / (scr.width * scr.height) * 100
@@ -97,6 +97,11 @@ def scanTemplate():
     print("")
     print("Scanning finished")
     print("total", founds, "blocks found")
+    print("MAP : ", TEMPLATE_MAP)
+
+    global DEBUG_min_error_rate, DEBUG_min_error_rate2
+    print("min Err Rate was : ", DEBUG_min_error_rate)
+    print("\t 2nd : ", DEBUG_min_error_rate2)
 
 def compImg(img1, img2):
     # Compare two images that are cropped. (or not)
@@ -113,6 +118,8 @@ def compSimImage(img1, img2):
     
     _COMP_BOX = (4, 4) # 분할하여 비교할 영역의 너비, 높이
 
+    global DEBUG_min_error_rate , DEBUG_min_error_rate2
+
     for bX in range(0, img1.width, _COMP_BOX[0]):
         for bY in range(0, img1.height, _COMP_BOX[1]):
             box = (
@@ -126,9 +133,14 @@ def compSimImage(img1, img2):
                 img2.crop(box)
             )
 
+            # Debug
+            if DEBUG_min_error_rate > errorRate:
+                DEBUG_min_error_rate2 = DEBUG_min_error_rate
+                DEBUG_min_error_rate = errorRate
+
             if errorRate >= MAX_ERROR_RATE:
-                print("e.r. : ", errorRate)
-                return errorRate # False
+                return False
+
     return True
     
     
