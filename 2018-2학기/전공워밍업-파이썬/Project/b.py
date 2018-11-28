@@ -1,5 +1,3 @@
-# http://www.freeminesweeper.org/minecore.html
-
 from PIL import Image, ImageGrab
 
 from PIL import ImageTk
@@ -23,9 +21,6 @@ def printImg(image):
 def main():
     # Load all required assets
     loadImg()
-
-    printImgInit() # TEST
-
     scanTemplate()
 
 def loadImg():
@@ -60,7 +55,7 @@ def scanTemplate():
     if isMacOS:
         scr.thumbnail((scr.width/2, scr.height/2), Image.ANTIALIAS)
 
-    # As long as tiles has same widths and heights
+    # As long as all tiles has shares same width and height
     global TILE_WIDTH, TILE_HEIGHT
 
     TILE_WIDTH  = OPEN_0.width
@@ -69,10 +64,13 @@ def scanTemplate():
     ratio = OPEN_0.width / TILE_WIDTH
     print(ratio)
 
+
+    printImgInit() # TEST
     printImg(scr)
     
-    for scrX in range(82, 341): # scr.width
-        for scrY in range(128, 464): # scr.height
+    # Screen이 너무 넓어 스캔과정이 오래 걸리기에 일시적으로 스캔 영역을 제한하여둠
+    for scrX in range(17, 521): # scr.width
+        for scrY in range(142, 408): # scr.height
             sys.stdout.write("\r")
             part = scr.crop((
                 scrX,
@@ -86,6 +84,7 @@ def scanTemplate():
             if compImg(part, OPEN_0):
                 print("Found!")
 
+            # Print scanning progress state.
             progress =  (scrX * scr.height + scrY) / (scr.width * scr.height) * 100
             sys.stdout.write("Scanning progress: %.6f%%" % (progress) )
             sys.stdout.flush()
@@ -110,7 +109,12 @@ def sigImg(image):
     B = 0
     for x in range(image.width):
         for y in range(image.height):
-            (R, B, G) += pix[x, y]
+            (r, b, g) = pix[x, y]
+            R += r
+            B += b
+            G += g
+    
+    
 
 
 def scanTile(x, y):
