@@ -1,11 +1,12 @@
-from PIL import Image, ImageGrab
-
-from PIL import ImageTk
+from PIL import Image, ImageGrab, ImageTk
 import tkinter as tk
-
 import sys
+import math
 
 isMacOS = True
+isDebug = True
+
+MAX_ERROR_RATE = 0.00001
 
 def printImgInit():
     global window, canvas
@@ -58,15 +59,15 @@ def scanTemplate():
     # As long as all tiles has shares same width and height
     global TILE_WIDTH, TILE_HEIGHT
 
-    TILE_WIDTH  = OPEN_0.width
-    TILE_HEIGHT = OPEN_0.height
+    TILE_WIDTH  = BLANK.width
+    TILE_HEIGHT = BLANK.height
 
-    ratio = OPEN_0.width / TILE_WIDTH
-    print(ratio)
+    if isDebug:
+        printImgInit() # TEST
+        printImg(scr)
 
-
-    printImgInit() # TEST
-    printImg(scr)
+    founds = 0 # debug
+    minEr = 10000 # debug
     
     # Screen이 너무 넓어 스캔과정이 오래 걸리기에 일시적으로 스캔 영역을 제한하여둠
     for scrX in range(17, 521): # scr.width
@@ -79,10 +80,15 @@ def scanTemplate():
                 scrY+TILE_HEIGHT
             ))
 
-            printImg(part)
+            # printImg(part)
 
-            if compImg(part, OPEN_0):
-                print("Found!")
+            debugEr = compSimImage(part, BLANK)
+            if minEr > debugEr:
+                minEr = debugEr
+
+            # if compSimImage(part, BLANK):
+            #     print("Found!")
+            #     founds += 1
 
             # Print scanning progress state.
             progress =  (scrX * scr.height + scrY) / (scr.width * scr.height) * 100
@@ -90,6 +96,7 @@ def scanTemplate():
             sys.stdout.flush()
     print("")
     print("Scanning finished")
+    print("total", founds, "blocks found")
 
 def compImg(img1, img2):
     # Compare two images that are cropped. (or not)
@@ -101,21 +108,63 @@ def compImg(img1, img2):
                 return False
     return True
 
-def sigImg(image):
+def compSimImage(img1, img2):
+    # Compare two images and return whether they are simillar or not.
+    
+    _COMP_BOX = (4, 4) # 분할하여 비교할 영역의 너비, 높이
+
+    for bX in range(0, img1.width, _COMP_BOX[0]):
+        for bY in range(0, img1.height, _COMP_BOX[1]):
+            box = (
+                bX,
+                bY,
+                bX + _COMP_BOX[0] - 1,
+                bY + _COMP_BOX[1] - 1
+            )
+            errorRate = getImgErrRate(
+                img1.crop(box),
+                img2.crop(box)
+            )
+
+            if errorRate >= MAX_ERROR_RATE:
+                print("e.r. : ", errorRate)
+                return errorRate # False
+    return True
+    
+    
+
+def getImgErrRate(img1, img2):
+    (r1, g1, b1) = meanImg(img1)
+    (r2, g2, b2) = meanImg(img2)
+
+    err_rate = math.sqrt(
+        pow((r1-r2), 2)+
+        pow((g1-g2), 2)+
+        pow((b1-b2), 2)
+    )
+
+    return err_rate
+
+def meanImg(image):
     # 이미지 내의 모든 픽셀의 rgb값의 분산을 구함
-    pix = image.load()
+    pix = image.convert('RGB').load()
     R = 0
     G = 0
     B = 0
     for x in range(image.width):
         for y in range(image.height):
-            (r, b, g) = pix[x, y]
+            r, g, b = pix[x, y]
             R += r
-            B += b
             G += g
-    
-    
+            B += b
 
+    n_of_pixels = image.width * image.height
+
+    R /= n_of_pixels
+    B /= n_of_pixels
+    G /= n_of_pixels
+
+    return (R, B, G)
 
 def scanTile(x, y):
     pass
