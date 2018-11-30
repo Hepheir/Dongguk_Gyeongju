@@ -42,38 +42,38 @@ def loadImg():
     
     print("Load assets")
 
-    BLANK = Image.open('asset/blank.gif')
-    BOMB_FLAGGED  = Image.open('asset/bombflagged.gif')
-    BOMB_QUESTION = Image.open('asset/bombquestion.gif')
-    BOMB_DEATH    = Image.open('asset/bombdeath.gif')
-    OPEN_0 = Image.open('asset/open0.gif')
-    OPEN_1 = Image.open('asset/open1.gif')
-    OPEN_2 = Image.open('asset/open2.gif')
-    OPEN_3 = Image.open('asset/open3.gif')
-    OPEN_4 = Image.open('asset/open4.gif')
-    OPEN_5 = Image.open('asset/open5.gif')
-    OPEN_6 = Image.open('asset/open6.gif')
-    OPEN_7 = Image.open('asset/open7.gif')
-    OPEN_8 = Image.open('asset/open8.gif')
+    BLANK = Image.open('asset/blank.gif').convert('RGB')
+    BOMB_FLAGGED  = Image.open('asset/bombflagged.gif').convert('RGB')
+    BOMB_QUESTION = Image.open('asset/bombquestion.gif').convert('RGB')
+    BOMB_DEATH    = Image.open('asset/bombdeath.gif').convert('RGB')
+    OPEN_0 = Image.open('asset/open0.gif').convert('RGB')
+    OPEN_1 = Image.open('asset/open1.gif').convert('RGB')
+    OPEN_2 = Image.open('asset/open2.gif').convert('RGB')
+    OPEN_3 = Image.open('asset/open3.gif').convert('RGB')
+    OPEN_4 = Image.open('asset/open4.gif').convert('RGB')
+    OPEN_5 = Image.open('asset/open5.gif').convert('RGB')
+    OPEN_6 = Image.open('asset/open6.gif').convert('RGB')
+    OPEN_7 = Image.open('asset/open7.gif').convert('RGB')
+    OPEN_8 = Image.open('asset/open8.gif').convert('RGB')
 
 
 def scanTemplate():
     # Scan the template consisted of 'BLANK's.
     print("Scan template position")
-    _START_TILE = BLANK
+    _TARGET = BLANK
 
     # Get screen shot
-    scr = ImageGrab.grab()
+    scr = ImageGrab.grab().convert('RGB')
 
     if isMacOS:
         # macOS에서 화면 캡쳐시 실제 이미지와 비율이 다른 점을 보정.
-        scr.thumbnail((scr.width/2, scr.height/2), Image.ANTIALIAS)
+        scr.thumbnail((scr.width/2, scr.height/2))
 
     # As long as all tiles has shares same width and height
     global TILE_WIDTH, TILE_HEIGHT
 
-    TILE_WIDTH  = _START_TILE.width
-    TILE_HEIGHT = _START_TILE.height
+    TILE_WIDTH  = _TARGET.width
+    TILE_HEIGHT = _TARGET.height
 
     founds = 0
 
@@ -84,6 +84,11 @@ def scanTemplate():
         scan_gapsX = 1
         scan_gapsY = 1
 
+    TEMPLATE_MAP = findImg(scr, _TARGET)
+
+    print(TEMPLATE_MAP)
+
+"""
     scrX = 0
     while scrX < scr.width:
         scrY = 0
@@ -98,7 +103,7 @@ def scanTemplate():
                 scrY+TILE_HEIGHT
             ))
 
-            if compSimImage(part, _START_TILE):
+            if compSimImage(part, _TARGET):
                 # If tile is found, append the tile data to the TEMPLATE_MAP
                 TEMPLATE_MAP.append((scrX, scrY))
                 founds += 1
@@ -122,51 +127,71 @@ def scanTemplate():
     global DEBUG_min_error_rate, DEBUG_min_error_rate2
     print("min Err Rate was : ", DEBUG_min_error_rate)
     print("  2nd : ", DEBUG_min_error_rate2)
+"""
 
-def compImg(img1, img2):
-    # Compare two images that are cropped. (or not)
-    px1 = img1.load()
-    px2 = img2.load()
-    for x in range(img1.width):
-        for y in range(img1.height):
-            if not px1[x, y] == px2[x, y]:
-                return False
-    return True
 
-def compSimImage(img1, img2, allowedErrorRate=MAX_ERROR_RATE):
-    # Compare two images and return whether they are simillar or not.
-    _COMP_BOX = (2, 2) # 분할하여 비교할 영역의 너비, 높이
+def findImg(fromImg, findImg):
+    # 큰 비율로 압축된 이미지 -> 적은 비율 ""로 조금씩 비교해 감.
+    _map = [
+        (0, 0),
+        (fromImg.width-TILE_WIDTH, fromImg.height-TILE_HEIGHT)
+    ]
 
-    boxes = 0
-    dErrorRate = 0
-    for bX in range(0, img1.width, _COMP_BOX[0]):
-        for bY in range(0, img1.height, _COMP_BOX[1]):
-            box = (
-                bX,
-                bY,
-                bX + _COMP_BOX[0] - 1,
-                bY + _COMP_BOX[1] - 1
-            )
-            dErrorRate += getImgErrRate(
-                img1.crop(box),
-                img2.crop(box)
-            )
-            boxes += 1
+    for lv in [1, 2, 4, 8, 16]:
+        _from = fromImg
+        _find = findImg
+        _from.thumbnail((
+            _from.width/(TILE_WIDTH/lv),
+            _from.height/(TILE_HEIGHT/lv)
+        ))
+        _find.thumbnail((
+            _find.width/(TILE_WIDTH/lv),
+            _find.height/(TILE_HEIGHT/lv)
+        ))
 
-    meanErrorRate = dErrorRate / boxes
+        _from.crop((
+            _map[0][0], _map[0][1],
+            _map[-1][0]+(TILE_WIDTH/lv), _map[-1][1]+(TILE_HEIGHT/lv)
+        ))
 
-    # Debug
-    global DEBUG_min_error_rate , DEBUG_min_error_rate2
-    if DEBUG_min_error_rate > meanErrorRate:
-        DEBUG_min_error_rate2 = DEBUG_min_error_rate
-        DEBUG_min_error_rate = meanErrorRate
+        _m = _findImg(_from, _find)
 
-    return meanErrorRate <= allowedErrorRate
-    
+        if not _m[0]:
+            # If nothing found, stop searching.
+            break
+        else:
+            _map = _m
 
-def getImgErrRate(img1, img2):
-    (r1, g1, b1) = meanImg(img1)
-    (r2, g2, b2) = meanImg(img2)
+    return _map
+
+def _findImg(fromImg, findImg):
+    _map = []
+
+    pix1 = fromImg.load()
+    pix2 = findImg.load()
+
+    for x in range(fromImg.width):
+        for y in range(fromImg.height):
+            if getPixelErrRate(pix1[x, y], pix2[0, 0]) < 2:
+                # findImg의 0, 0위치 픽셀과 거의 일치하는 픽셀이 발견되면,
+                # 해당 픽셀로 부터 findImg.width * findImg.height 범위의
+                # 픽셀을 비교한다.
+                isEqual = True
+                for sX in range(findImg.width):
+                    for sY in range(findImg.height):
+                        if getPixelErrRate(pix1[x+sX, y+sY], pix2[sX, sY]) >= 2:
+                            isEqual = False
+                            break
+                    if not isEqual:
+                        break
+                if isEqual:
+                    _map.append((x, y))
+    return _map
+
+
+def getPixelErrRate(pix1, pix2):
+    (r1, g1, b1) = pix1
+    (r2, g2, b2) = pix2
 
     err_rate = math.sqrt(
         pow((r1-r2), 2)+
