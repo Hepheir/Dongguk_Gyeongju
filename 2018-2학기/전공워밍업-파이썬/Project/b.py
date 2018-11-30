@@ -3,6 +3,9 @@ import tkinter as tk
 import sys
 import math
 
+from pynput.mouse import Button, Controller
+mouse = Controller()
+
 isMacOS = True
 isDebug = True
 
@@ -53,29 +56,38 @@ def loadImg():
 
 
 def scanTemplate():
-    # Scan the template consisted of 'open0's.
-
+    # Scan the template consisted of 'BLANK's.
     print("Scan template position")
+    _START_TILE = BLANK
 
+    # Get screen shot
     scr = ImageGrab.grab()
+
     if isMacOS:
+        # macOS에서 화면 캡쳐시 실제 이미지와 비율이 다른 점을 보정.
         scr.thumbnail((scr.width/2, scr.height/2), Image.ANTIALIAS)
 
     # As long as all tiles has shares same width and height
     global TILE_WIDTH, TILE_HEIGHT
 
-    TILE_WIDTH  = BLANK.width
-    TILE_HEIGHT = BLANK.height
+    TILE_WIDTH  = _START_TILE.width
+    TILE_HEIGHT = _START_TILE.height
 
-    if isDebug:
-        printImgInit() # TEST
-        printImg(scr)
+    founds = 0
 
-    founds = 0 # debug
-    
-    # Screen이 너무 넓어 스캔과정이 오래 걸리기에 일시적으로 스캔 영역을 제한하여둠
-    for scrX in range(17, 521): # scr.width
-        for scrY in range(142, 408): # scr.height
+    if isMacOS:
+        scan_gapsX = 0.25
+        scan_gapsY = 0.25
+    else:
+        scan_gapsX = 1
+        scan_gapsY = 1
+
+    scrX = 0
+    while scrX < scr.width:
+        scrY = 0
+        while scrY < scr.height:
+    # for scrX in range(16, 520, scrX_gaps):
+    #     for scrY in range(140, 408, scrY_gaps):
             sys.stdout.write("\r")
             part = scr.crop((
                 scrX,
@@ -84,24 +96,30 @@ def scanTemplate():
                 scrY+TILE_HEIGHT
             ))
 
-            # printImg(part)
-
-            if compSimImage(part, BLANK):
+            if compSimImage(part, _START_TILE):
+                # If tile is found, append the tile data to the TEMPLATE_MAP
                 TEMPLATE_MAP.append((scrX, scrY))
                 founds += 1
 
             # Print scanning progress state.
-            progress =  (scrX * scr.height + scrY) / (scr.width * scr.height) * 100
-            sys.stdout.write("Scanning progress: %.6f%%" % (progress) )
+            progress = 100 * (scrX * scr.height + scrY) / (scr.width * scr.height)
+            sys.stdout.write("Scanning progress: %.6f%%\tFounds: %d" % (progress, founds) )
             sys.stdout.flush()
+
+        # If a TILE has been found, there's no need to search every single pixels.
+            if founds:
+                scan_gapsY = TILE_HEIGHT
+            scrY += scan_gapsY
+        if founds:
+            scan_gapsX = TILE_WIDTH
+        scrX += scan_gapsX
     print("")
     print("Scanning finished")
     print("total", founds, "blocks found")
-    print("MAP : ", TEMPLATE_MAP)
 
     global DEBUG_min_error_rate, DEBUG_min_error_rate2
     print("min Err Rate was : ", DEBUG_min_error_rate)
-    print("\t 2nd : ", DEBUG_min_error_rate2)
+    print("  2nd : ", DEBUG_min_error_rate2)
 
 def compImg(img1, img2):
     # Compare two images that are cropped. (or not)
@@ -113,13 +131,12 @@ def compImg(img1, img2):
                 return False
     return True
 
-def compSimImage(img1, img2):
+def compSimImage(img1, img2, allowedErrorRate=MAX_ERROR_RATE):
     # Compare two images and return whether they are simillar or not.
-    
-    _COMP_BOX = (4, 4) # 분할하여 비교할 영역의 너비, 높이
+    _COMP_BOX = (2, 2) # 분할하여 비교할 영역의 너비, 높이
 
-    global DEBUG_min_error_rate , DEBUG_min_error_rate2
-
+    boxes = 0
+    dErrorRate = 0
     for bX in range(0, img1.width, _COMP_BOX[0]):
         for bY in range(0, img1.height, _COMP_BOX[1]):
             box = (
@@ -128,21 +145,21 @@ def compSimImage(img1, img2):
                 bX + _COMP_BOX[0] - 1,
                 bY + _COMP_BOX[1] - 1
             )
-            errorRate = getImgErrRate(
+            dErrorRate += getImgErrRate(
                 img1.crop(box),
                 img2.crop(box)
             )
+            boxes += 1
 
-            # Debug
-            if DEBUG_min_error_rate > errorRate:
-                DEBUG_min_error_rate2 = DEBUG_min_error_rate
-                DEBUG_min_error_rate = errorRate
+    meanErrorRate = dErrorRate / boxes
 
-            if errorRate >= MAX_ERROR_RATE:
-                return False
+    # Debug
+    global DEBUG_min_error_rate , DEBUG_min_error_rate2
+    if DEBUG_min_error_rate > meanErrorRate:
+        DEBUG_min_error_rate2 = DEBUG_min_error_rate
+        DEBUG_min_error_rate = meanErrorRate
 
-    return True
-    
+    return meanErrorRate <= allowedErrorRate
     
 
 def getImgErrRate(img1, img2):
