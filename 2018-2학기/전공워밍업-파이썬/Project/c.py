@@ -1,9 +1,8 @@
 # http://www.freeminesweeper.org/minecore.html
 
-from PIL import Image, ImageGrab, ImageTk, ImageChops
-import tkinter as tk
-import sys
-import math
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
 
 import sys
 import math
@@ -18,7 +17,7 @@ def main():
     scanTemplate()
 
 def openImg(path):
-    return Image.open(path).convert('RGB')
+    return cv2.imread(path, 0)
 
 def loadImg():
     # Load all required assets
@@ -41,127 +40,41 @@ def loadImg():
             self.OPEN_6 = openImg('asset/open6.gif')
             self.OPEN_7 = openImg('asset/open7.gif')
             self.OPEN_8 = openImg('asset/open8.gif')
-
-            self.width = self.BLANK.width
-            self.height = self.BLANK.height
     ASSET = _Asset()
 
-def getScreenShot(isOS_X=False):
-    _scr = ImageGrab.grab().convert('RGB')
-    # macOS에서 화면 캡쳐시 실제 이미지와 비율이 다른 점을 보정.
-    if isOS_X:
-        _scr.thumbnail((_scr.width/2, _scr.height/2))
-    return _scr
+def scanTemplate():        
+    img = openImg('asset/blank.gif')
+    img2 = img
+    template = openImg('capture.gif')
+    w, h = template.shape[::-1]
 
+    # All the 6 methods for comparison in a list
+    methods = ['cv2.TM_CCOEFF', 'cv2.TM_CCOEFF_NORMED', 'cv2.TM_CCORR',
+                'cv2.TM_CCORR_NORMED', 'cv2.TM_SQDIFF', 'cv2.TM_SQDIFF_NORMED']
 
-def scanTemplate():
-    # Scan the template consisted of 'BLANK's.
-    print("Scan template position")
-    scr = getScreenShot(isOS_X=True)
-    TEMPLATE_MAP = findImg(scr, ASSET.BLANK)
-    print(TEMPLATE_MAP)
+    for meth in methods:
+        img = img2.copy()
+        method = eval(meth)
 
+        # Apply template Matching
+        res = cv2.matchTemplate(img,template,method)
+        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
 
-def findImg(fromImg, findImg):
-    # 큰 비율로 압축된 이미지 -> 적은 비율 ""로 조금씩 비교해 감.
-    _map = [
-        (0, 0),
-        (fromImg.width-ASSET.width, fromImg.height-ASSET.height)
-    ]
-
-    for lv in [2, 4, 8, 16]:
-        _from = fromImg
-        _find = findImg
-        _from.thumbnail((
-            _from.width/(ASSET.width/lv),
-            _from.height/(ASSET.height/lv)
-        ))
-        _find.thumbnail((
-            _find.width/(ASSET.width/lv),
-            _find.height/(ASSET.height/lv)
-        ))
-
-        _from.crop((
-            _map[0][0], _map[0][1],
-            _map[-1][0]+(ASSET.width/lv), _map[-1][1]+(ASSET.height/lv)
-        ))
-
-        _m = _findImg(_from, _find)
-
-        if len(_m) == 0:
-            # If nothing found, stop searching.
-            print("found nothing at lv %d" % lv)
-            break
+        # If the method is TM_SQDIFF or TM_SQDIFF_NORMED, take minimum
+        if method in [cv2.TM_SQDIFF, cv2.TM_SQDIFF_NORMED]:
+            top_left = min_loc
         else:
-            _map = _m
+            top_left = max_loc
+        bottom_right = (top_left[0] + w, top_left[1] + h)
 
-    return _map
+        cv2.rectangle(img,top_left, bottom_right, 255, 2)
 
-def _findImg(fromImg, findImg):
-    print(ImageChops.difference(fromImg, findImg))
-    return
-    _map = []
+        plt.subplot(121),plt.imshow(res,cmap = 'gray')
+        plt.title('Matching Result'), plt.xticks([]), plt.yticks([])
+        plt.subplot(122),plt.imshow(img,cmap = 'gray')
+        plt.title('Detected Point'), plt.xticks([]), plt.yticks([])
+        plt.suptitle(meth)
 
-    pix1 = fromImg.load()
-    pix2 = findImg.load()
-
-    for x in range(fromImg.width):
-        for y in range(fromImg.height):
-            if getPixelErrRate(pix1[x, y], pix2[0, 0]) < 2:
-                print("")
-                print("Oh!")
-                # findImg의 0, 0위치 픽셀과 거의 일치하는 픽셀이 발견되면,
-                # 해당 픽셀로 부터 findImg.width * findImg.height 범위의
-                # 픽셀을 비교한다.
-                isEqual = True
-                for sX in range(findImg.width):
-                    for sY in range(findImg.height):
-                        if getPixelErrRate(pix1[x+sX, y+sY], pix2[sX, sY]) >= 2:
-                            isEqual = False
-                            break
-                    if not isEqual:
-                        break
-                if isEqual:
-                    _map.append((x, y))
-            progress = 100 * (x * fromImg.height + y) / (fromImg.width * fromImg.height)
-            sys.stdout.write("Scanning progress: %.6f%%\r" % (progress) )
-            sys.stdout.flush()
-    print("")
-    return _map
-
-
-def getPixelErrRate(pix1, pix2):
-    (r1, g1, b1) = pix1
-    (r2, g2, b2) = pix2
-
-    err_rate = math.sqrt(
-        pow((r1-r2), 2)+
-        pow((g1-g2), 2)+
-        pow((b1-b2), 2)
-    )
-
-    return err_rate
-
-def meanImg(image):
-    # 이미지 내의 모든 픽셀의 rgb값의 분산을 구함
-    pix = image.convert('RGB').load()
-    R = 0
-    G = 0
-    B = 0
-    for x in range(image.width):
-        for y in range(image.height):
-            r, g, b = pix[x, y]
-            R += r
-            G += g
-            B += b
-
-    n_of_pixels = image.width * image.height
-
-    R /= n_of_pixels
-    B /= n_of_pixels
-    G /= n_of_pixels
-
-    return (R, B, G)
-
+        plt.show()
 
 main()
