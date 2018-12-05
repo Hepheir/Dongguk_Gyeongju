@@ -79,6 +79,7 @@ ISR(SIG_OVERFLOW0)
     else {
         // 오버플로우가 250번 발생해야 Interrupt 0 실행
         EIFR |= 0x01;
+        cnt = 0;
     }
     sei(); // 전체 인터럽트 허용
 }
