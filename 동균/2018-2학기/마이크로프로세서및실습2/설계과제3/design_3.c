@@ -3,47 +3,86 @@
 #include <util/delay.h>
 
 #include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
 #include "my_atmega128.h"
 #include "my_LCD.h"
 
-#define DATA_LENGTH 10
 
-char rx_data;
-char tx_data[DATA_LENGTH];
+// Constants
 
-unsigned short vR;
+#define DATA_LENGTH 12 // 송신할 문자열의 길이
+#define PERIOD_MS 1000 // 송신 주기
 
-int loop = 0;
-int sends = 0;
+#define CMD_START "<ADC_START>"
+#define CMD_END "#"
 
-void serialSend(char text[], unsigned char length);
-unsigned short resistorScan(unsigned char i);
+#define BUFFER_LENGTH 16 // 버퍼에 저장할 수신한 문자들의 최대 갯수
+
+
+// Global Variables
+
+char rx_data; // 수신한 문자
+char tx_data[DATA_LENGTH]; // 송신할 문자열
+
+unsigned short vR; // 가변 저항의 저항 값 (ADC)
+
+int loop = 0;   // 타이머 루프
+int sends = 0;  // 지금까지 송신한 횟수
+
+bool enableSerialCom = false; // 시리얼 통신 활성/비활성
+
+char Buffer[BUFFER_LENGTH+1] = { '\0' }; // 수신한 문자와 수신할 문자들을 저장하는 버퍼
+
+
+// Functions
+
+void writeChBuffer(char c); // 수신한 문자를 버퍼에 저장하는 함수
+void serialSend(char text[], unsigned char length); // 문자열을 Serial통신으로 PC에 송신하는 함수
+
+unsigned short resistorScan(unsigned char i); // 가변저항의 ADC값을 반환하는 함수
+  double ADC_to_voltage(unsigned short _ADC); // ADC 값을 [V] 단위로 바꿔주는 함수
+unsigned char keyScan(void); // (유틸) Key Matrix에서 현재 눌려있는 키의 번호를 반환하는 함수
+
+void LED_ON(unsigned char i);
+void LED_OFF(unsigned char i);
+
+
+// Serial 통신 수신 Interrupt
 
 ISR(USART0_RX_vect)
 {
     cli();
-    rx_data = UDR0;
-    UCSR0A &= 0x7f;
+    rx_data = UDR0; // 수신 받은 데이터를 임시 변수에 저장
+    writeChBuffer(rx_data); // 수신 받은 문자를 버퍼에 저장
+    UCSR0A &= 0x7f; // clear RXC flag
     sei();
 }
+
+
+// Timer/Counter 0 Overflow Interrupt
 
 ISR(TIMER0_OVF_vect)
 {
     // TIMER 0 : 8bit
-
-    if (loop < 100)
+    if (loop < PERIOD_MS/10)
         loop++;
     else {
         loop = 0;
-        // 현재 전압값을 표시한 문자열을 생성하고 tx_data에 저장
-        sprintf(tx_data, "%5d [V]\n", vR);
-        // 문자열을 PC로 전송
-        serialSend(tx_data, DATA_LENGTH);
+        // 시리얼 통신이 활성화 되어있으면 ㄱㄱ
+        if (enableSerialCom) {
+            // 현재 전압값을 표시한 문자열을 생성하고 tx_data에 저장
+            sprintf(tx_data, "\n%4d [ADC]", vR);
+            // 문자열을 PC로 전송
+            serialSend(tx_data, DATA_LENGTH);
+        }
     }
 
-    // 144 클럭을 카운트 하기위해 TCNT0을 112로 지정.
-    TCNT0 = 112; // 256 - 144 = 112.
+    // 154 클럭을 카운트 하기위해 TCNT0을 102로 지정.
+    TCNT0 = 102; // 256 - 154
 }
+
 
 void init()
 {
@@ -79,19 +118,84 @@ int main(void)
     char msg_1[16];
     char msg_2[16];
 
-    rx_data = '*';
+    rx_data = '_';
+
+    // 버퍼의 마지막 문자는 항상 NULL 문자 (문자열로서 사용하기 편하게)
+    for (unsigned char i = 0; i < BUFFER_LENGTH; i++) Buffer[i] = '_'; // 언더바(_)로 초기화
+    Buffer[BUFFER_LENGTH] = '\0';
+
+    // 유틸리티
+    unsigned char keyNum = 0; // 현재 눌린 키의 번호
+    unsigned char scrNum = 0; // 현재 표시중인 화면 번호 (어떤 번호의 키를 눌러야 나오는 화면인지)
+    unsigned char lastScrNum = 0; // 이전에 표시했던 화면 번호.
 
 	while (1)
 	{
-        vR = resistorScan(0); // VR0 Scan
+    // 가변 저항의 ADC 값 구하기
+        vR = resistorScan(1); // VR1 Scan
 
-        // Print on LCD
-        // "                "
-        sprintf(msg_1, "S: %3d, Tmr0: %2d", sends, loop);
-        sprintf(msg_2, "Last: %c, V: %4d", rx_data, vR);
+    // LCD 출력 (유틸리티)
+        keyNum = keyScan();
+
+        // 일반 모드는 한번 버튼이 눌렸다 놓여도 상태 유지.
+        if (keyNum != 0 && keyNum != scrNum) {
+            lastScrNum = scrNum;
+            scrNum = keyNum;
+        }
+        // Debug 모드는 버튼이 눌려있는 동안만 유지.
+        else if (scrNum >= 17)
+            scrNum = lastScrNum;
+
+        switch (keyNum) {
+            case 3: // Buffer의 내용 출력
+                sprintf(msg_1, "1. Buffer Text  ");
+                sprintf(msg_2, "%s", Buffer);
+                break;
+            case 4: // Timer 관련 레지스터, 변수 상태
+                sprintf(msg_1, "2. Timer/Cntr 0 ");
+                sprintf(msg_2, "TCNT0:%2X/loop:%2d", TCNT0, loop);
+                break;
+            case 5: // Serial 통신 송신 관련 상태 (송신 횟수, 송신 활성화(1)/비활성화(0) 여부)
+                sprintf(msg_1, "3. Serial Status");
+                sprintf(msg_2, "Send:%04d/Stat:%d", sends, enableSerialCom);
+                break;
+            case 6: // 가변 저항의 값
+                sprintf(msg_1, "4. Var. Resistor");
+                sprintf(msg_2, "ADC:%4d/V:%4.3lf", vR, ADC_to_voltage(vR));
+                break;
+            case 17: // DEBUG #1 : Force Enable serial communication.
+                sprintf(msg_1, "Debug #1. Serial");
+                sprintf(msg_2, "Force Enabled   ");
+                enableSerialCom = true;
+                break;
+            case 18: // DEBUG #2 : Force Disable serial communication.
+                sprintf(msg_1, "Debug #2. Serial");
+                sprintf(msg_2, "Force Disabled  ");
+                enableSerialCom = false;
+                break;
         
+            default:
+                sprintf(msg_1, "design_3.c ~Hep.");
+                sprintf(msg_2, "fin. 2018/12/06 ");
+                break;
+        }
+
         LCD_string(0x80, msg_1);
         LCD_string(0xC0, msg_2);
+
+    // 명령어 인지
+
+        // Buffer 문자열의 마지막 11개 문자가 "<ADC_START>" 이면, 송신 활성화
+        if (!strcmp(CMD_START, &Buffer[BUFFER_LENGTH-11]))
+            enableSerialCom = true;
+        
+        // Buffer 문자열의 마지막 문자가 "#" 이면, 송신 비활성화
+        if (!strcmp(CMD_END, &Buffer[BUFFER_LENGTH-1]))
+            enableSerialCom = false;
+
+    // LED Control
+        if (enableSerialCom) LED_ON(2);
+        else LED_OFF(2);
 
         Delay_ms(5);
 	}
@@ -101,6 +205,8 @@ int main(void)
 
 void serialSend(char text[], unsigned char length)
 {
+    LED_ON(7);
+
     unsigned char i;
     for (i = 0; i < length; i++)
     {
@@ -109,15 +215,68 @@ void serialSend(char text[], unsigned char length)
         // 데이터를 보낸다.
         UDR0 = text[i];
     }
-    sends++;
+    sends++; // 지금까지 송신한 횟수 +1
+    
+    LED_OFF(7);
+}
+
+void writeChBuffer(char c)
+{
+    unsigned i;
+    for (i = 0; i < BUFFER_LENGTH-1; i++)
+        Buffer[i] = Buffer[i+1];
+    Buffer[BUFFER_LENGTH-1] = c;
+    // Buffer는 BUFFER_LENGTH + 1 의 크기로 선언 되었고, 
+    // Buffer[BUFFER_LENGTH] 에는 항상 Null 문자가 있음.
+}
+
+unsigned char keyScan(void) {
+    unsigned char keyNum = 0;
+
+    // SAVE ORIGINAL STATE
+    unsigned char ddre  = DDRE;
+    unsigned char porte = PORTE;
+
+    // DDR*  : 핀의 사용용도를 정의하는 레지스터 (0 = 입력으로 사용, 1 = 출력으로 사용)
+    // PORT* : 핀을 출력용으로 사용할 때 출력값을 쓰는 레지스터 (0 = 출력안함, 1 = 출력함)
+    // PIN*  : 핀을 입력용으로 사용할 때 입력값을 받는 레지스터
+
+    // 0x00의 16진수에서 1의 자리수는 여기서 다루지 않을 비트 값이고,
+    // 16의 자리수(앞자리수 0x*0의 *부분)는 key_scan/key_data 각각 사용하는 4개의 핀들이다.
+
+    DDRE  |= 0xF0; // key_scan 에 사용될 4핀을 모두 출력으로 설정
+    PORTE &= 0x0F; // key_scan 에 사용되는 4 핀이 출력하고 있는 값을 0으로 설정
+
+    unsigned char i, j;
+    for (i = 0; i < 4; i++) {
+        PORTE |= (0x10 << i); // (1) key_scan 의 i번째 핀만 출력값을 1로 설정, 나머지는 출력 안함.
+        
+        for (j = 0; j < 4; j++)
+        {
+            if (PIND & (0x10 << j)) // (2) key_data 의 j번째 핀에 1이 입력되는지를 확인
+            {
+                // (3) key_data 특정 핀에 입력이 확인되면, (1) 단계에서 출력한 key_scan 핀 번호와
+                //     입력이 감지된 key_data 핀 번호의 조합을 통해 스위치 번호를 찾아낼 수 있음.
+                keyNum = 3 + (4 * i) + j; // 스위치는 S3부터 시작하므로 3을 더하고 시작함.
+            }
+        }
+
+        PORTE &= ~(0x10 << i); // (4) key_scan 의 i번째 핀만 출력값을 다시 0으로 되돌림.
+    }
+
+    // ROLL BACK
+    DDRE  = ddre;
+    PORTE = porte;
+
+    return keyNum;
 }
 
 unsigned short resistorScan(unsigned char i) {
-    if (i == 0) {
-        ADMUX = 0x00; // VR0
+    if (i == 1) {
+        ADMUX = 0x00; // VR1
     }
-    else if (i == 1) {
-        ADMUX = 0x01; // VR1
+    else if (i == 2) {
+        ADMUX = 0x01; // VR2
     }
     else
         return 0x0000;
@@ -133,4 +292,18 @@ unsigned short resistorScan(unsigned char i) {
     ADCSRA |= 0x10;
     
     return ADC;
+}
+
+    double ADC_to_voltage(unsigned short _ADC) {
+        // 5V 에서의 ADC값이 십진수로 1023, 이진수로 11 1111 1111이므로
+        return (_ADC / (double) 0x3FF) * 5;
+    }
+
+
+void LED_ON(unsigned char i) {
+	PORTC |= (1 << i);
+}
+
+void LED_OFF(unsigned char i) {
+	PORTC &= ~(1 << i);
 }
