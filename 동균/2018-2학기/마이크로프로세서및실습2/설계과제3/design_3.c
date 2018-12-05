@@ -143,10 +143,10 @@ int main(void)
             scrNum = keyNum;
         }
         // Debug 모드는 버튼이 눌려있는 동안만 유지.
-        else if (scrNum >= 17)
+        else if (keyNum == 0 && scrNum >= 17)
             scrNum = lastScrNum;
 
-        switch (keyNum) {
+        switch (scrNum) {
             case 3: // Buffer의 내용 출력
                 sprintf(msg_1, "1. Buffer Text  ");
                 sprintf(msg_2, "%s", Buffer);
@@ -205,7 +205,7 @@ int main(void)
 
 void serialSend(char text[], unsigned char length)
 {
-    LED_ON(7);
+    LED_ON(7); // (유틸) - 송신이 되고 있는지 7번 LED를 통해 표시
 
     unsigned char i;
     for (i = 0; i < length; i++)
@@ -217,7 +217,7 @@ void serialSend(char text[], unsigned char length)
     }
     sends++; // 지금까지 송신한 횟수 +1
     
-    LED_OFF(7);
+    LED_OFF(7); // (유틸) - 송신이 끝났는지 7번 LED를 통해 표시
 }
 
 void writeChBuffer(char c)
