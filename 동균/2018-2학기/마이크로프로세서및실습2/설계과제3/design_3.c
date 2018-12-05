@@ -6,7 +6,6 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-#include "my_atmega128.h"
 #include "my_LCD.h"
 #include "hepheir_atmega128.h"
 
@@ -113,7 +112,9 @@ int main(void)
     sei();          // 전체 인터럽트 허용
     
     unsigned char vR = 0x00; // 가변 저항의 전압 값
-    unsigned char i;
+
+    char msg_1[16];
+    char msg_2[16];
 
 	while (1)
 	{
@@ -132,7 +133,7 @@ int main(void)
 
         // Print on LCD
         sprintf(msg_1, "EX-7 ADC test   ");
-        sprintf(msg_2, "%3d            %c", vR);
+        sprintf(msg_2, "%3d             ", vR);
         
         LCD_string(0x80, msg_1);
         LCD_string(0xC0, msg_2);

@@ -1,3 +1,4 @@
+#include <avr/delay.h>
 
 void LCD_command(unsigned char command)  /* write a command(instruction) to text LCD */
 {                                        
@@ -7,7 +8,7 @@ void LCD_command(unsigned char command)  /* write a command(instruction) to text
      asm (" PUSH  R0 ");			// delay for about 250 ns
      asm (" POP   R0 ");
      PORTC &= ~1<<1; 			// E = 0
-     Delay_us(50);
+     _delay_us(50);
 }
 
 void LCD_data(unsigned char data)		/* display a character on text LCD */
@@ -19,7 +20,7 @@ void LCD_data(unsigned char data)		/* display a character on text LCD */
      asm (" PUSH  R0 ");			// delay for about 250 ns
      asm (" POP   R0 ");
      PORTC &= ~1<<1; 			// E = 0
-     Delay_us(50);
+     _delay_us(50);
 }
 
 void LCD_string(char command, char *string)   /* display a string on LCD */
@@ -37,11 +38,11 @@ void LCD_initialize(void)			/* initialize text LCD module */
      PORTC |= 1<<0;
      PORTC &= ~1<<1;				// E = 0, Rs = 1
      PORTC |= 1<<0;
-     Delay_ms(2);
+     _delay_ms(2);
 
      LCD_command(0x38);	       // function set(8 bit, 2 line, 5x7 dot)
      LCD_command(0x0C);	       // display control(display ON, cursor OFF)
      LCD_command(0x06);	       // entry mode set(increment, not shift)
      LCD_command(0x01);	       // clear display
-     Delay_ms(2);
+     _delay_ms(2);
 }
