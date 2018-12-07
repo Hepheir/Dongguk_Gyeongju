@@ -138,6 +138,7 @@ int main(void)
         keyNum = keyScan();
 
         // 일반 모드는 한번 버튼이 눌렸다 놓여도 상태 유지.
+        // 눌린 키의 값이 변할 때만 감지 하도록 keyNum != scrNum 의 조건을 넣어줌.
         if (keyNum != 0 && keyNum != scrNum) {
             lastScrNum = scrNum;
             scrNum = keyNum;
@@ -163,6 +164,8 @@ int main(void)
                 sprintf(msg_1, "4. Var. Resistor");
                 sprintf(msg_2, "ADC:%4d/V:%4.3lf", vR, ADC_to_voltage(vR));
                 break;
+            
+            // 이 아래는 디버그용 기능들. 명령어 입력 없이도 Serial 통신 활성화/비활성화 를 강제 할 수 있음.
             case 17: // DEBUG #1 : Force Enable serial communication.
                 sprintf(msg_1, "Debug #1. Serial");
                 sprintf(msg_2, "Force Enabled   ");
@@ -174,6 +177,7 @@ int main(void)
                 enableSerialCom = false;
                 break;
         
+            // 기본 화면
             default:
                 sprintf(msg_1, "design_3.c ~Hep.");
                 sprintf(msg_2, "fin. 2018/12/06 ");
@@ -187,10 +191,19 @@ int main(void)
 
         // Buffer 문자열의 마지막 11개 문자가 "<ADC_START>" 이면, 송신 활성화
         if (!strcmp(CMD_START, &Buffer[BUFFER_LENGTH-11]))
+        {
+            // 디버그 모드의 Serial 통신 Force Enable/Disable 의 원할한 작동을 위해
+            // 명령어가 입력 되면 (명령어 입력감지가 중복 되지 않게) Buffer에 문자를 하나 넣어줌.
+            // 그렇지 않으면, 명령어 감지가 연속으로 이루어져, Force disable 이 동작하지 않게 됨.
+            writeChBuffer('*');
             enableSerialCom = true;
+        }
         
         // Buffer 문자열의 마지막 문자가 "#" 이면, 송신 비활성화
         if (!strcmp(CMD_END, &Buffer[BUFFER_LENGTH-1]))
+            // 디버그 모드의 Serial 통신 Force Enable/Disable 의 원할한 작동을 위해
+            // 명령어가 입력 되면 (명령어 입력감지가 중복 되지 않게) Buffer에 문자를 하나 넣어줌.
+            writeChBuffer('*');
             enableSerialCom = false;
 
     // LED Control
