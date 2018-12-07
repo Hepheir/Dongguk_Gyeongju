@@ -105,9 +105,9 @@ void init()
 
     // TIMER 준비
     TCCR0 = 0b00000111; // normal 모드, 분주비 1024, OC0차단
-    TCNT0 = 112;
+    TCNT0 = 102;
     
-    TIMSK = 0b00000001; // TOIE0 = 1 (TIMER/COUNTER 0 Enable)
+    TIMSK = 0b00000001; // TOIE0 = 1 (TIMER/COUNTER Inturrupt Masking 해제. (0 = Enable) )
     SREG = 0x80; // sei();
 }
 
