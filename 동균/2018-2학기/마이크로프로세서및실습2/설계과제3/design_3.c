@@ -190,7 +190,7 @@ int main(void)
     // 명령어 인지
 
         // Buffer 문자열의 마지막 11개 문자가 "<ADC_START>" 이면, 송신 활성화
-        if (!strcmp(CMD_START, &Buffer[BUFFER_LENGTH-11]))
+        if (!strcmp(CMD_START, &Buffer[BUFFER_LENGTH-strlen(CMD_START)]))
         {
             // 디버그 모드의 Serial 통신 Force Enable/Disable 의 원할한 작동을 위해
             // 명령어가 입력 되면 (명령어 입력감지가 중복 되지 않게) Buffer에 문자를 하나 넣어줌.
@@ -200,13 +200,16 @@ int main(void)
         }
         
         // Buffer 문자열의 마지막 문자가 "#" 이면, 송신 비활성화
-        if (!strcmp(CMD_END, &Buffer[BUFFER_LENGTH-1]))
+        if (!strcmp(CMD_END, &Buffer[BUFFER_LENGTH-strlen(CMD_END)]))
+        {
             // 디버그 모드의 Serial 통신 Force Enable/Disable 의 원할한 작동을 위해
             // 명령어가 입력 되면 (명령어 입력감지가 중복 되지 않게) Buffer에 문자를 하나 넣어줌.
             writeChBuffer('*');
             enableSerialCom = false;
+        }
 
     // LED Control
+        // Serial 통신의 활성/비활성 여부를 알기 쉽게 2번 LED에 표시
         if (enableSerialCom) LED_ON(2);
         else LED_OFF(2);
 
@@ -235,10 +238,12 @@ void serialSend(char text[], unsigned char length)
 
 void writeChBuffer(char c)
 {
+    // Buffer 배열을 -1만큼 shift하고, 마지막 원소로 c를 push함.
     unsigned i;
     for (i = 0; i < BUFFER_LENGTH-1; i++)
-        Buffer[i] = Buffer[i+1];
-    Buffer[BUFFER_LENGTH-1] = c;
+        Buffer[i] = Buffer[i+1]; // -1 방향으로 shift.
+    Buffer[BUFFER_LENGTH-1] = c; // 마지막 원소로 c를 push.
+
     // Buffer는 BUFFER_LENGTH + 1 의 크기로 선언 되었고, 
     // Buffer[BUFFER_LENGTH] 에는 항상 Null 문자가 있음.
 }
