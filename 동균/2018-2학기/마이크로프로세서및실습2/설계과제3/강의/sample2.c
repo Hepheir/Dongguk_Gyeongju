@@ -43,20 +43,20 @@ int main(void)
         tx_data = rx_data;    // 전송할 데이터 설정
 
         // 다음 알파벳 생성, z면 a로 다시 시작
-        if(rx_data != 100)
+        if('A'<= rx_data && rx_data <= 'z')
         {
             rx_data++;
         }
         else
         {
-            rx_data = 0;
+            rx_data = 'a';
         }
 
         while((UCSR0A & 0x20) == 0x00);    // UDE가 비었으면 송신 가능
 
         UDR0 = tx_data;    // 데이터를 보낸다.
 
-        _delay_ms(800);
+        _delay_ms(10);
 		}
 
     return 0;

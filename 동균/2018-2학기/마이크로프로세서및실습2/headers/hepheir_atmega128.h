@@ -1,5 +1,4 @@
 #include <avr/io.h>
-#include "my_atmega128.h"
 
 unsigned char keyScan(void) {
     unsigned char keyNum = 0;
@@ -21,7 +20,6 @@ unsigned char keyScan(void) {
     unsigned char i, j;
     for (i = 0; i < 4; i++) {
         PORTE |= (0x10 << i); // (1) key_scan 의 i번째 핀만 출력값을 1로 설정, 나머지는 출력 안함.
-        Delay_us(5);
         
         for (j = 0; j < 4; j++)
         {
@@ -56,7 +54,6 @@ unsigned short resistorScan(unsigned char i) {
     // AD converter 활성화, 변환동작 시작, Free running mode
     // ,인터럽트 사용안함, ADC 클럭을 128분주	
     ADCSRA = 0xF7;
-    Delay_ms(5);
 
     // AD conversion이 완료 되기까지 대기 (폴링 방식)
     while((ADCSRA & 0x10) == 0);

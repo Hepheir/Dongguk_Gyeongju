@@ -1,4 +1,3 @@
-
 void LCD_command(unsigned char command)  /* write a command(instruction) to text LCD */
 {                                        
      PORTC &= ~(1<<1 | 1<<0); 		// E = 0, Rs = 0  
