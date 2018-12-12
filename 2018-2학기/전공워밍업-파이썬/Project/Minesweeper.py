@@ -9,6 +9,11 @@ MINE = '*'
 MINE_FLAGGED = '!*'
 MINE_GAMEOVER = '**'
 
+SKIN_COVERED = '[]'
+SKIN_OPENED = '  '
+SKIN_GAMEOVER = '!!'
+SKIN_HIGHLIGHT = '##'
+
 # Global Variables
 Map = []
 MapWidth = 31
@@ -86,7 +91,6 @@ def setMineField():
     for i in range(Mines):
         hideMines()
 
-
 def openTile(x, y):
     # 타일을 여는 함수
     global Map, MapHeight, MapWidth
@@ -116,8 +120,7 @@ def openTile(x, y):
 
                 if Map[x+dx][y+dy] == BLANK:
                     openTile(x+dx, y+dy)
-    
-    
+      
 def searchMinesAround(x, y):
     # 타일 주위에 있는 지뢰를 찾아 그 수를 반환하는 함수
     global Map, MapWidth, MapHeight
@@ -155,26 +158,78 @@ def flagTile(x, y):
     else:
         Map[x][y] = FLAGGED
     
-def printMap():
+
+class C_COLORS:
+    # HEADER = '\033[95m'
+    # OKBLUE = '\033[94m'
+    # OKGREEN = '\033[92m'
+    # WARNING = '\033[93m'
+    # FAIL = '\033[91m'
+    # ENDC = '\033[0m'
+    # BOLD = '\033[1m'
+    # UNDERLINE = '\033[4m'
+    RED   = "\033[1;31m" #3  
+    BLUE  = "\033[1;34m" #1
+    CYAN  = "\033[1;36m" #4,5,6,7,8...
+    GREEN = "\033[0;32m" #2
+    RESET = "\033[0;0m" 
+    BOLD    = "\033[;1m"
+    REVERSE = "\033[;7m"
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+
+def printMap(highlightBox=None):
     # 사용자가 보기 쉽게 필드를 출력하는 함수
     global Map, MapWidth, MapHeight
     global BLANK, MINE, FLAGGED, MINE_FLAGGED, MINE_GAMEOVER
+    global SKIN_COVERED, SKIN_OPENED, SKIN_GAMEOVER, SKIN_HIGHLIGHT
+
+    if not highlightBox == None:
+        (x1, y1, x2, y2) = highlightBox
+    else:
+        isHighlight = False
+
+    charColor = C_COLORS.RESET
 
     for y in range(MapHeight):
         for x in range(MapWidth):
-            tile = '[_]'
+            if not isHighlight == False:
+                isHighlight = (y1 <= y and y < y2) and (x1 <= x and x < x2)
 
             if Map[x][y] == BLANK or Map[x][y] == MINE:
-                tile = '[_]'
+                tile = SKIN_COVERED[0] + '_' + SKIN_COVERED[1]
+                charColor = C_COLORS.RESET
+
             elif Map[x][y] == FLAGGED or Map[x][y] == MINE_FLAGGED:
-                tile = '[!]'
+                tile = SKIN_COVERED[0] + '!' + SKIN_COVERED[1]
+                charColor = C_COLORS.WARNING
+
             elif Map[x][y] == 0:
-                tile = '   '
+                tile = SKIN_OPENED[0] + ' ' + SKIN_OPENED[1]
+                charColor = C_COLORS.RESET
+
             elif Map[x][y] == MINE_GAMEOVER:
-                tile = '!'+ MINE +'!'
+                tile = SKIN_GAMEOVER[0] + MINE + SKIN_GAMEOVER[1]
+                charColor = C_COLORS.FAIL
+
             else:
-                tile = ' %d ' % Map[x][y]
-            print(tile, end='')
+                TileNum = Map[x][y]
+                if TileNum == 1:
+                    charColor = C_COLORS.BLUE
+                elif TileNum == 2:
+                    charColor = C_COLORS.GREEN
+                elif TileNum == 3:
+                    charColor = C_COLORS.RED
+                else:
+                    charColor = C_COLORS.CYAN
+
+                tile = SKIN_OPENED[0] + str(Map[x][y]) + SKIN_OPENED[1]
+    
+            if isHighlight:
+                print(C_COLORS.BOLD, end='')
+
+            print(charColor, end='')
+            print(tile + C_COLORS.RESET, end='')
         print('')
 
 def openAll():

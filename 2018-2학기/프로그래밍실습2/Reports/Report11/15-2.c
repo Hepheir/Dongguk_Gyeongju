@@ -25,10 +25,10 @@ int main()
         printf("파일이 열리지 않습니다.\n");
         exit(1);
     }
-    fscanf(f, "%d %s %d %d\n", &cnt, &name, &point1, &point2);
-    
-    fprintf(stdout, "\n%6s%16s%10s%8s\n", "번호", "이름", "중간", "기발");
-    fprintf(stdout, "%5s%18s%8s%8s\n", cnt, name, point1, point2);
+    fscanf(f, "%d %s %d %d\n", &cnt, name, &point1, &point2);
+
+    fprintf(stdout, "\n%6s%16s%10s%8s\n", "번호", "이름", "중간", "기말");
+    fprintf(stdout, "%3d%18s%8d%8d\n", cnt, name, point1, point2);
     fclose(f);
 
     return 0;

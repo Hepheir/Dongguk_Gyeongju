@@ -19,7 +19,8 @@ int main()
     char fname[] = "score.bin";
     FILE *f;
 
-    if (fopen_s(&f, fname, "wb") != 0)
+    // if (fopen_s(&f, fname, "wb") != 0)
+    if ( (f = fopen(fname, "wb")) == NULL )
     {
         printf("파일이 열리지 않습니다.\n");
         exit(1);
@@ -33,11 +34,16 @@ int main()
     fgets(line, 80, stdin);
 
     // 다른 점 1
+
     while (!feof(stdin))
     {
         // 다른 점 2
-        sscanf_s(line, "%s %d %d %d", score.name, 40,
-            &score.mid, &score.final, &score.quiz);
+        sscanf(line, "%s %d %d %d",
+            score.name,
+            &score.mid,
+            &score.final,
+            &score.quiz
+        );
 
         score.number = ++cnt;
         fwrite(&score, sizeof(pscore), 1, f);
