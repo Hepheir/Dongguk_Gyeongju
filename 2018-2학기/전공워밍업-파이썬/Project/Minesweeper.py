@@ -208,7 +208,7 @@ def flagTile(x, y):
 def printMap(highlightBox=None):
     # 사용자가 보기 쉽게 필드를 출력하는 함수
     global Map, MapWidth, MapHeight
-    global BLANK, MINE, FLAGGED, MINE_FLAGGED, MINE_GAMEOVER
+    global BLANK, MINE, FLAGGED, MINE_FLAGGED, MINE_REVEALED, MINE_GAMEOVER
     global SKIN_COVERED, SKIN_OPENED, SKIN_GAMEOVER, SKIN_HIGHLIGHT
 
     if not highlightBox == None:
