@@ -3,6 +3,8 @@
 import random
 from colorama import init, Fore, Back, Style
 
+exportAsFile = True
+
 # colorma initialize
 init()
 
@@ -12,6 +14,7 @@ FLAGGED = '!'
 MINE = '*'
 MINE_FLAGGED = '!*'
 MINE_GAMEOVER = '**'
+MINE_REVEALED = '_*'
 
 SKIN_COVERED = '[]'
 SKIN_OPENED = '  '
@@ -48,6 +51,7 @@ def run():
         printMap(highlightBox)
 
         print("------------ Action ------------")
+        print("현재 턴 수: %d\n" % Count)
         print("1. 열기")
         print("2. 깃발 세우기/제거하기")
         print("3. 강조구역 설정")
@@ -91,7 +95,7 @@ def run():
                 openTile(x, y)
             # 게임 오버
             else:
-                openAll()
+                revealMines() # 숨겨져 있던 지뢰들은 표시해주고 끝냄
                 printMap()
                 print("GAME OVER")
                 break
@@ -99,36 +103,44 @@ def run():
 
 def getEmptyMap():
     # 빈 필드를 생성하는 함수
-    global Map, MapWidth, MapHeight
-    Map = []
+    global MapWidth, MapHeight
+    _Map = []
     for i in range(MapWidth):
-        Map.append([BLANK] * MapHeight)
+        _Map.append([BLANK] * MapHeight)
+    return _Map
 
-def hideMines():
+def hideMines(Map):
     # 임의의 타일에 지뢰를 심는 함수
-    global Map, MapWidth, MapHeight
+    global MapWidth, MapHeight
 
     x = random.randrange(0, MapWidth)
     y = random.randrange(0, MapHeight)
     # 이미 지뢰가 있으면, 다른 타일에 지뢰를 심음
     if (Map[x][y] == MINE):
-        hideMines()
+        Map = hideMines(Map)
     else:
         Map[x][y] = MINE
+    return Map
 
 def setMineField():
     # 필드를 생성하고 생성한 필드에 지뢰를 심음
-    getEmptyMap()
+    global Map
+    Map = getEmptyMap()
     for i in range(Mines):
-        hideMines()
+        Map = hideMines(Map)
 
 def openTile(x, y):
     # 타일을 여는 함수
     global Map, MapHeight, MapWidth
     global BLANK, MINE, FLAGGED, MINE_FLAGGED, MINE_GAMEOVER
 
+    # 깃발이 꽃혀있는 곳은 열지 못함
+    if Map[x][y] == FLAGGED or Map[x][y] == MINE_FLAGGED:
+        print("Can not open the flagged place.")
+        return
+
     # 지뢰를 건들면 지뢰가 터짐
-    if Map[x][y] == MINE or Map[x][y] == MINE_FLAGGED:
+    if Map[x][y] == MINE:
         Map[x][y] = MINE_GAMEOVER
         return
 
@@ -176,17 +188,22 @@ def flagTile(x, y):
     global Map
     global MINE, MINE_FLAGGED, FLAGGED, BLANK
 
+    Tile = Map[x][y]
+
     # 지뢰가 심어진 칸을 다루는 경우
-    if Map[x][y] == MINE:
+    if Tile == MINE:
         Map[x][y] = MINE_FLAGGED
-    elif Map[x][y] == MINE_FLAGGED:
+    elif Tile == MINE_FLAGGED:
         Map[x][y] = MINE
 
     # 지뢰가 심어지지 않은 칸을 다루는 경우
-    elif Map[x][y] == FLAGGED:
+    elif Tile == FLAGGED:
         Map[x][y] = BLANK
-    else:
+    elif Tile == BLANK:
         Map[x][y] = FLAGGED
+    
+    else:
+        print("Could not place a flag.")
 
 def printMap(highlightBox=None):
     # 사용자가 보기 쉽게 필드를 출력하는 함수
@@ -206,7 +223,7 @@ def printMap(highlightBox=None):
     for y in range(MapHeight):
         # 보드의 x, y의 칸 번호 안내 표시
         if y == 0:
-            print("   ", end='')
+            print("y\\x", end='')
             for x in range(MapWidth):
                 print(" %-2d" % (x + 1), end='')
             print("")
@@ -240,11 +257,18 @@ def printMap(highlightBox=None):
                 tile_color = Fore.BLACK
                 tile_backgroundColor = Back.RED
 
+            # 게임 오버시 숨겨진 지뢰 표시
+            elif Map[x][y] == MINE_REVEALED:
+                tile_content = SKIN_GAMEOVER[0] + MINE + SKIN_GAMEOVER[1]
+                
+                tile_color = Fore.BLACK
+                tile_backgroundColor = Back.YELLOW
+
             # 열린 칸 - 주변에 지뢰가 없는 빈 칸 표시
             elif Map[x][y] == 0:
                 tile_content = SKIN_OPENED[0] + ' ' + SKIN_OPENED[1]
                 
-                tile_color = Fore.WHITE
+                tile_color = None
                 tile_backgroundColor = None
 
             # 일반 열린 타일은 각 숫자에 해당되는 색상으로 출력
@@ -296,8 +320,35 @@ def printMap(highlightBox=None):
                 Style.RESET_ALL,
             end='')
         print('')
+    
+    if exportAsFile:
+        printMapFile()
 
-def openAll():
-    pass
+def printMapFile(fname='minesweeper.map'):
+    # 지뢰가 모두 숨겨진 맵을 파일로 출력
+    global Map, MapWidth, MapHeight
+    global BLANK, MINE, FLAGGED, MINE_FLAGGED
+
+    _Map = getEmptyMap()
+    for x in range(MapWidth):
+        for y in range(MapHeight):
+            Tile = Map[x][y]
+
+            if Tile == MINE:
+                Tile = BLANK
+
+            elif Tile == MINE_FLAGGED:
+                Tile = FLAGGED
+            _Map[x][y] = Tile
+
+    f = open(fname, 'w')
+    f.write('%d\n%d\n'%(MapWidth, MapHeight) + str(_Map))
+    f.close()
+
+def revealMines():
+    for x in range(MapWidth):
+        for y in range(MapHeight):
+            if Map[x][y] == MINE or Map[x][y] == MINE_FLAGGED:
+                Map[x][y] = MINE_REVEALED
 
 main()

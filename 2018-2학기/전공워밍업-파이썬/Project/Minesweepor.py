@@ -1,17 +1,10 @@
 # 지뢰찾기를 하는 프로그램
 
-import time
+import random
 
-from subprocess import Popen, PIPE
-
-FPS = 2
-
-GAME_SOURCE_PATH = 'Minesweeper.py'
+MAP = []
 
 def main():
-    global PROC
-
-    runGame()
     x = 0
     y = 0
 
@@ -20,17 +13,13 @@ def main():
             print(line, end='')
 
 
+def scanMapFile(fname='minesweeper.map'):
+    # 지뢰가 모두 숨겨진 맵을 파일로 출력
+    global Map, MapWidth, MapHeight
+    global BLANK, MINE, FLAGGED, MINE_FLAGGED
 
-def runGame():
-    global PROC
-    PROC = Popen(['python3', GAME_SOURCE_PATH],
-        stdout=PIPE,
-        bufsize=1,
-        universal_newlines=True
-    )
-
-
-def delay():
-    time.sleep(1/FPS)
+    f = open(fname, 'r')
+    f.read()
+    f.close()
 
 main()
