@@ -30,10 +30,7 @@ Mines = 79
 Count = 0
 
 def main():
-    while True:
-        run()
-        if (input("게임을 계속 하시겠습니까? (y/n): ") == 'n'):
-            break
+    run()
 
 def run():
     # 게임 1회 실행하는 함수
@@ -56,7 +53,16 @@ def run():
         print("2. 깃발 세우기/제거하기")
         print("3. 강조구역 설정")
         print("0. 종료")
+        print("")
+        
+        print("할 작업을 골라주세요")
         act = int(input(">>> "))
+        
+        # 잘못된 입력에 대한 예외처리 1
+        try:
+        except:
+            print("Invalid Input")
+            continue
 
         # 종료
         if act == 0:
@@ -64,11 +70,23 @@ def run():
 
         # 강조 할 구역 재설정
         if act == 3:
-            h_x1, h_y1, h_x2, h_y2 = [int(k) for k in input("(x1, y1, x2, y2): ").split()]
-            highlightBox = (h_x1, h_y1, h_x2, h_y2)
+            try:
+                h_x1, h_y1, h_x2, h_y2 = [int(k) for k in input("(x1, y1, x2, y2): ").split()]
+                highlightBox = (
+                    h_x1 - 1, h_y1 - 1,
+                    h_x2, h_y2
+                )
+            except:
+                print("강조구역 해제")
+                highlightBox = None
+            
+            # Count가 +1 되지 않게 continue 시킴
+            continue
         
+        # 좌표가 필요한 작업
         elif act == 1 or act == 2:
-            # 작업을 처리할 좌표 입력
+            print("")
+            print("좌표를 차례대로 입력 해주세요")
             x = int(input("x 좌표 (1~%d): " % MapWidth)) - 1
             y = int(input("y 좌표 (1~%d): " % MapHeight)) - 1
 
@@ -78,9 +96,9 @@ def run():
             elif act == 2:
                 flagTile(x, y)
 
-        # 잘못된 입력에 대한 예외 처리
+        # 잘못된 입력에 대한 예외처리 2
         else:
-            print("Invalid Input")
+            print("Invalid Number")
             continue
 
         Tile = Map[x][y]
@@ -97,7 +115,9 @@ def run():
             else:
                 revealMines() # 숨겨져 있던 지뢰들은 표시해주고 끝냄
                 printMap()
-                print("GAME OVER")
+                print(Fore.RED, end='')
+                print("------------ GAME OVER ------------", end='')
+                print(Fore.RESET)
                 break
         Count += 1
 
@@ -221,13 +241,16 @@ def printMap(highlightBox=None):
     
     print("------------ Mine Field ------------")
     for y in range(MapHeight):
-        # 보드의 x, y의 칸 번호 안내 표시
+        # 보드의 x, y의 칸 번호 안내 표시 (DIM:어두운 색상으로 표시)
         if y == 0:
+            print(Style.DIM, end='')
             print("y\\x", end='')
             for x in range(MapWidth):
                 print(" %-2d" % (x + 1), end='')
-            print("")
-        print("%2d " % (y + 1), end='')
+            print(Style.RESET_ALL)
+    
+        print(Style.DIM, end='')
+        print("%2d " % (y + 1), end=Style.RESET_ALL)
 
         for x in range(MapWidth):
             # 만약 하이라이트 구간이 정해져 있으면, 지금 x, y값이 하이라이트 구간 내부인지 확인
@@ -238,74 +261,67 @@ def printMap(highlightBox=None):
 
             # 열리지 않은 칸 표시
             if Map[x][y] == BLANK or Map[x][y] == MINE:
-                tile_content = SKIN_COVERED[0] + '_' + SKIN_COVERED[1]
-                
+                tile_content = ApplyTileSkin('_', SKIN_COVERED)
                 tile_color = None
                 tile_backgroundColor = None
 
             # 깃발이 꽃혀있는 칸 표시
             elif Map[x][y] == FLAGGED or Map[x][y] == MINE_FLAGGED:
-                tile_content = SKIN_COVERED[0] + FLAGGED + SKIN_COVERED[1]
-                
+                tile_content = ApplyTileSkin(FLAGGED, SKIN_COVERED)
                 tile_color = Fore.YELLOW
                 tile_backgroundColor = None
 
             # 터트린 지뢰 표시
             elif Map[x][y] == MINE_GAMEOVER:
-                tile_content = SKIN_GAMEOVER[0] + MINE + SKIN_GAMEOVER[1]
+                tile_content = ApplyTileSkin(MINE, SKIN_GAMEOVER)
                 
                 tile_color = Fore.BLACK
                 tile_backgroundColor = Back.RED
 
             # 게임 오버시 숨겨진 지뢰 표시
             elif Map[x][y] == MINE_REVEALED:
-                tile_content = SKIN_GAMEOVER[0] + MINE + SKIN_GAMEOVER[1]
-                
+                tile_content = ApplyTileSkin(MINE, SKIN_GAMEOVER)
                 tile_color = Fore.BLACK
                 tile_backgroundColor = Back.YELLOW
 
             # 열린 칸 - 주변에 지뢰가 없는 빈 칸 표시
             elif Map[x][y] == 0:
-                tile_content = SKIN_OPENED[0] + ' ' + SKIN_OPENED[1]
-                
+                tile_content = ApplyTileSkin(' ', SKIN_OPENED)
                 tile_color = None
                 tile_backgroundColor = None
 
             # 일반 열린 타일은 각 숫자에 해당되는 색상으로 출력
             else:
                 tile_num = Map[x][y]
-                tile_content = SKIN_OPENED[0] + str(tile_num) + SKIN_OPENED[1]
+                
+                tile_content = ApplyTileSkin(str(tile_num), SKIN_OPENED)
+                tile_backgroundColor = None
 
                 if tile_num == 1:
                     tile_color = Fore.BLUE
-
                 elif tile_num == 2:
                     tile_color = Fore.GREEN
-                    
                 elif tile_num == 3:
                     tile_color = Fore.RED
-                    
                 elif tile_num == 4:
                     tile_color = Fore.BLUE
-                    
                 else:
                     tile_color = Fore.CYAN
 
-                tile_backgroundColor = Back.BLACK
-
             # 하이라이트 구간은 볼드체로 표시
             if isHighlight:
-                tile_style = Style.BRIGHT
                 tile_color = Fore.MAGENTA
+                tile_style = Style.BRIGHT
             else:
-                tile_style = Style.DIM
+                tile_style = None
 
-            # 기본 색상, 기본 배경
+            # 기본 색상, 기본 배경, 기본 스타일
             if tile_color == None:
                 tile_color = Fore.RESET
-
             if tile_backgroundColor == None:
                 tile_backgroundColor = Back.RESET
+            if tile_style == None:
+                tile_style = Style.NORMAL
 
             # 타일을 출력하고, 색상을 다시 원래대로 돌림
             print(
@@ -323,6 +339,9 @@ def printMap(highlightBox=None):
     
     if exportAsFile:
         printMapFile()
+
+def ApplyTileSkin(Tile, Skin):
+    return Skin[0] + Tile + Skin[1]
 
 def printMapFile(fname='minesweeper.map'):
     # 지뢰가 모두 숨겨진 맵을 파일로 출력
