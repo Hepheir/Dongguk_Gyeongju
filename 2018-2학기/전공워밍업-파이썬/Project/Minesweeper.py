@@ -203,7 +203,7 @@ def run():
             printFile_field()
 
         if readInputFromFile:
-            menu_code, (x, y), highlightBox = superProcess_input()
+            menu_code, (x, y), highlightBox = readFile_input()
 
             if menu_code == 1:
                 FIELD.open(x, y)
@@ -241,13 +241,13 @@ def run():
             print_gameover()
             break
 
-def superProcess_input():
+def readFile_input(fname='minesweeper.input'):
     f = None
     updated = False
     content = None
 
     while not updated:
-        f = open('minesweeper.input', 'r')
+        f = open(fname, 'r')
         content = f.readline()
         f.close()
         
@@ -258,7 +258,7 @@ def superProcess_input():
     (x, y) = eval(f.readline())
     highlightBox = eval(f.readline())
     
-    f = open('minesweeper.input', 'w')
+    f = open(fname, 'w')
     f.close()
 
     return [menu_code, (x, y), highlightBox]
