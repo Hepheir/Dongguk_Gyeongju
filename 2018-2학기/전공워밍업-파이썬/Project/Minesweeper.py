@@ -213,11 +213,6 @@ def run():
                 FIELD.flag(x, y)
                 turns += 1
 
-            # DEBUG
-            print(str(menu_code))
-            print(str((x,y)))
-            print(str(highlightBox))
-
         else:
             menu_code = None
             while menu_code == None:
