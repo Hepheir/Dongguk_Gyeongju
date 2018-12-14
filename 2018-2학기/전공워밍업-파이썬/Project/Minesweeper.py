@@ -3,7 +3,8 @@
 import random
 from colorama import init, Fore, Back, Style
 
-exportAsFile = True
+INPUT_TYPES = ['console', 'file']
+inputType = INPUT_TYPES[1]
 
 # colorma initialize
 init()
@@ -56,53 +57,69 @@ def run():
         print("")
         
         print("할 작업을 골라주세요")
-        act = int(input(">>> "))
+        act = input(">>> ")
         
-        # 잘못된 입력에 대한 예외처리 1
+        # 잘못된 입력에 대한 예외처리
         try:
+            act = int(act)
         except:
-            print("Invalid Input")
+            print("[!] 잘못된 입력: 숫자가 아닙니다.")
             continue
 
         # 종료
         if act == 0:
             break
 
-        # 강조 할 구역 재설정
+        # 강조 할 구역 지정/해제
         if act == 3:
             try:
+                # 올바른 좌표들이 입력되었으면, 해당 구간을 강조표시 구간으로 지정
                 h_x1, h_y1, h_x2, h_y2 = [int(k) for k in input("(x1, y1, x2, y2): ").split()]
                 highlightBox = (
                     h_x1 - 1, h_y1 - 1,
                     h_x2, h_y2
                 )
             except:
+                # 그 외의 경우에는 강조구역 해제
                 print("강조구역 해제")
                 highlightBox = None
-            
-            # Count가 +1 되지 않게 continue 시킴
             continue
         
         # 좌표가 필요한 작업
         elif act == 1 or act == 2:
             print("")
             print("좌표를 차례대로 입력 해주세요")
-            x = int(input("x 좌표 (1~%d): " % MapWidth)) - 1
-            y = int(input("y 좌표 (1~%d): " % MapHeight)) - 1
 
+            x = input("x 좌표 (1~%d): " % MapWidth)
+            y = input("y 좌표 (1~%d): " % MapHeight)
+            
+            # 잘못된 입력에 대한 예외처리
+            try:
+                x = int(x) - 1
+                y = int(y) - 1
+            except:
+                print("[!] 잘못된 입력: 숫자가 아닙니다.")
+                continue
+            
+            # 잘못된 입력에 대한 예외처리
+            if (x < 0 or MapWidth <= x) or (y < 0 or MapHeight <= y):
+                print("[!] 잘못된 입력: 범위 밖의 좌표입니다.")
+                continue
+
+            # 해당 좌표를 열기
             if act == 1:
                 openTile(x, y)
 
+            # 해당 좌표에 깃발 꽂기
             elif act == 2:
                 flagTile(x, y)
 
-        # 잘못된 입력에 대한 예외처리 2
+        # 잘못된 입력에 대한 예외처리 3
         else:
-            print("Invalid Number")
+            print("[!] 잘못된 입력: 선택지에 없는 번호입니다.")
             continue
-
+        
         Tile = Map[x][y]
-
         # 지뢰가 터졌을 경우, 모든 타일을 열고 필드를 출력해 준 후에 게임 종료.
         if Tile == MINE_GAMEOVER:
             # 처음부터 지뢰가 있는 타일을 골랐을 경우, 지뢰를 터트리지 않고 새로운
@@ -119,6 +136,8 @@ def run():
                 print("------------ GAME OVER ------------", end='')
                 print(Fore.RESET)
                 break
+
+        # continue 를 만나지 않았으면 사용자가 작업을 한 것으로 추정, Count를 +1 함.
         Count += 1
 
 def getEmptyMap():
@@ -194,7 +213,7 @@ def searchMinesAround(x, y):
             # 자기 자신 생략
             if dx == 0 and dy == 0:
                 continue
-    
+
             # 범위 밖으로 가지 않도록 제어
             if x+dx < 0 or y+dy < 0 or x+dx >= MapWidth or y+dy >= MapHeight:
                 continue
