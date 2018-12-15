@@ -7,7 +7,7 @@ FIELD_HEIGHT = 16
 FIELD_MINES = 79
 
 readInputFromFile = False
-writeFieldFile = False
+writeFieldFile = True
 readFileDelayMS = 100
 
 def main():
@@ -236,7 +236,7 @@ def run():
             print_gameover()
             break
 
-def readFile_input(fname='minesweeper.input'):
+def readFile_input(fname='minesweeper.in'):
     f = None
     updated = False
     content = None
@@ -433,7 +433,7 @@ def print_gameover():
     print("------------ GAME OVER ------------", end='')
     print(Fore.RESET)
 
-def printFile_field(fname='minesweeper.field'):
+def printFile_field(fname='minesweeper.out'):
     global FIELD, ASSET
     field = []
     for x in range(FIELD.width):
