@@ -72,7 +72,7 @@ ISR(TIMER0_OVF_vect)
         // 시리얼 통신이 활성화 되어있으면 ㄱㄱ
         if (enableSerialCom) {
             // 현재 전압값을 표시한 문자열을 생성하고 tx_data에 저장
-            sprintf(tx_data, "\n%4d [ADC]", vR);
+            sprintf(tx_data, "\n%.2lf [V]", ADC_to_voltage(vR));
             // 문자열을 PC로 전송
             serialSend(tx_data, DATA_LENGTH);
         }
@@ -128,8 +128,8 @@ int main(void)
     unsigned char scrNum = 0; // 현재 표시중인 화면 번호 (어떤 번호의 키를 눌러야 나오는 화면인지)
     unsigned char lastScrNum = 0; // 이전에 표시했던 화면 번호.
 
-	while (1)
-	{
+   while (1)
+   {
     // 가변 저항의 ADC 값 구하기
         vR = resistorScan(1); // VR1 Scan
 
@@ -178,8 +178,8 @@ int main(void)
         
             // 기본 화면
             default:
-                sprintf(msg_1, "design_3.c ~Hep.");
-                sprintf(msg_2, "fin. 2018/12/06 ");
+                sprintf(msg_1, "Serial Enabled:%d", enableSerialCom);
+                sprintf(msg_2, "Voltage: %.2lf[V]", ADC_to_voltage(vR));
                 break;
         }
 
@@ -209,11 +209,8 @@ int main(void)
 
     // LED Control
         // Serial 통신의 활성/비활성 여부를 알기 쉽게 2번 LED에 표시
-        if (enableSerialCom) LED_ON(2);
-        else LED_OFF(2);
-
-        Delay_ms(5);
-	}
+        (enableSerialCom) ? LED_ON(2) : LED_OFF(2);
+   }
 
     return 0;
 }
@@ -299,7 +296,7 @@ unsigned short resistorScan(unsigned char i) {
         return 0x0000;
 
     // AD converter 활성화, 변환동작 시작, Free running mode
-    // ,인터럽트 사용안함, ADC 클럭을 128분주	
+    // ,인터럽트 사용안함, ADC 클럭을 128분주   
     ADCSRA = 0xF7;
 
     // AD conversion이 완료 되기까지 대기 (폴링 방식)
@@ -318,9 +315,9 @@ unsigned short resistorScan(unsigned char i) {
 
 
 void LED_ON(unsigned char i) {
-	PORTC |= (1 << i);
+   PORTC |= (1 << i);
 }
 
 void LED_OFF(unsigned char i) {
-	PORTC &= ~(1 << i);
+   PORTC &= ~(1 << i);
 }
