@@ -236,7 +236,7 @@ def run():
             print_gameover()
             break
 
-def readFile_input(fname='minesweeper.in'):
+def readFile_input(fname='minesweeper.input'):
     f = None
     updated = False
     content = None
@@ -433,7 +433,7 @@ def print_gameover():
     print("------------ GAME OVER ------------", end='')
     print(Fore.RESET)
 
-def printFile_field(fname='minesweeper.out'):
+def printFile_field(fname='minesweeper.field'):
     global FIELD, ASSET
     field = []
     for x in range(FIELD.width):

@@ -109,7 +109,7 @@ def closeConsoleGame():
 #   외부 프로세스에 입출력을 하기 위한 함수들
 #######################################
 
-def readFile_input(fname='minesweeper.in'):
+def readFile_input(fname='minesweeper.field'):
     global FIELD
     f = None
     updated = False
@@ -130,7 +130,7 @@ def readFile_input(fname='minesweeper.in'):
     f = open(fname, 'w')
     f.close()
 
-def writeFile_ouput(fname='minesweeper.out'):
+def writeFile_ouput(fname='minesweeper.input'):
     global OUTPUT
     f = open(fname, 'w')
     f.writelines([str(line) for line in [
