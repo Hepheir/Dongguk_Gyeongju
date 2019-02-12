@@ -1,6 +1,11 @@
 {
     "files.associations": {
         "stdio.h": "c",
-        "stdbool.h": "c"
+        "stdbool.h": "c",
+        "stdlib.h": "c",
+        "my_atmega128.h": "c",
+        "hepheir_atmega128.h": "c",
+        "interrupt.h": "c",
+        "io.h": "c"
     }
 }

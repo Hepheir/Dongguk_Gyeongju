@@ -94,6 +94,21 @@ def frame_openConfident(x, y):
     
     pass
 
+def frame_flagConfident(x, y):
+    pass
+
+def frame_quickScan(box):
+    pass
+
+def frame_checkTile(x, y, radius):
+    pass
+
+def frame_mineProbability(x, y, radius):
+    pass
+
+def frame_randomChoose(coordList):
+    pass
+
 #######################################
 #   외부 프로세스에 접근하기 위한 함수들
 #######################################
@@ -109,7 +124,7 @@ def closeConsoleGame():
 #   외부 프로세스에 입출력을 하기 위한 함수들
 #######################################
 
-def readFile_input(fname='minesweeper.field'):
+def readFile_input(fname='minesweeper.in'):
     global FIELD
     f = None
     updated = False
@@ -130,7 +145,7 @@ def readFile_input(fname='minesweeper.field'):
     f = open(fname, 'w')
     f.close()
 
-def writeFile_ouput(fname='minesweeper.input'):
+def writeFile_ouput(fname='minesweeper.out'):
     global OUTPUT
     f = open(fname, 'w')
     f.writelines([str(line) for line in [
