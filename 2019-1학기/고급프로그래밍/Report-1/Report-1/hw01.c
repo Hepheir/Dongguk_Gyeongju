@@ -159,8 +159,9 @@ void hw01_8() {
 }
 
 void hw01_9() {
+	char *units[9] =
+		{ "cm",		"m",	"inch", "feet", "yard", "mile", "ja",	"gan",	"lee" };
 	double data_table[9][9] = {
-		// cm		meter	inch	feet	yard	mile	ja		gan		lee
 		{ 1,		0,		0,		0,		0,		0,		0,		0,		0 },
 		{ 100,		0,		0,		0,		0,		0,		0,		0,		0 },
 		{ 2.54,		0,		0,		0,		0,		0,		0,		0,		0 },
@@ -169,9 +170,46 @@ void hw01_9() {
 		{ 160930,	0,		0,		0,		0,		0,		0,		0,		0 },
 		{ 30.303,	0,		0,		0,		0,		0,		0,		0,		0 },
 		{ 181.818,	0,		0,		0,		0,		0,		0,		0,		0 },
-		{ 392727,	0,		0,		0,		0,		0,		0,		0,		0 }
-	};
-	char *units[] = { "cm", "meter", "inch", "feet", "yard", "mile", "ja", "gan", "lee" };
+		{ 392727,	0,		0,		0,		0,		0,		0,		0,		0 } };
+
+	int row, col;
+	// Calc ratio based a centi meter, and write the ratio in the first row.
+	for (row = 1; row < 9; row++)
+		data_table[0][row] = 1 / data_table[row][0];
+
+	// Fill the rest of the table
+	double cm, ratio;
+	for (row = 1; row < 9; row++) {
+		cm = data_table[row][0];
+		for (col = 1; col < 9; col++) {
+			ratio = data_table[0][col];
+			data_table[row][col] = cm * ratio;
+		}
+	}
+
+	// Print table
+	for (row = 0; row < 9; row++) {
+		printf("1 %s\t", units[row]);
+		for (col = 0; col < 9; col++)
+			printf("%+15lf\t", data_table[row][col]);
+		printf("\n");
+	}
+	return;
+}
+
+void hw01_10() {
+	char *units[9] =
+		{ "g",		"kg",	"ton",	"gr",	"oz",	"lb",	"don",	"geun",	"guan" };
+	double data_table[9][9] = {
+		{ 1,		0,		0,		0,		0,		0,		0,		0,		0 },
+		{ 1000,		0,		0,		0,		0,		0,		0,		0,		0 },
+		{ 1000000,	0,		0,		0,		0,		0,		0,		0,		0 },
+		{ 0.06479,	0,		0,		0,		0,		0,		0,		0,		0 },
+		{ 28.3495,	0,		0,		0,		0,		0,		0,		0,		0 },
+		{ 453.592,	0,		0,		0,		0,		0,		0,		0,		0 },
+		{ 3.75,		0,		0,		0,		0,		0,		0,		0,		0 },
+		{ 600,		0,		0,		0,		0,		0,		0,		0,		0 },
+		{ 3750,		0,		0,		0,		0,		0,		0,		0,		0 } };
 
 	int row, col;
 	// Calc ratio based a centi meter, and write the ratio in the first row.
@@ -208,9 +246,10 @@ int main() {
 		hw01_6,
 		hw01_7,
 		hw01_8,
-		hw01_9 };
+		hw01_9,
+		hw01_10 };
 
-	for (int i = 0; i < 9; i++) {
+	for (int i = 8; i < 10; i++) {
 		printf("\n======== hw01-%d ========\n", i + 1);
 		funcList[i]();
 
