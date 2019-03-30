@@ -1,4 +1,3 @@
-
 public class Circle {
 	int radius;
 	String name;
