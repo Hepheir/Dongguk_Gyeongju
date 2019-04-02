@@ -35,8 +35,14 @@ void hw01_2() {
 		{ "경주용 자동차(F1)", 350 }
 	};
 
-	for (int i = 0; i < 4; i++)
-		printf("%s로 가는데 걸리는 시간 : %.2f\n", veh[i].name, (distance / veh[i].speed));
+	for (int i = 0; i < 4; i++) {
+		printf("%s로 가는데 걸리는 시간 : %.2f\n",
+			veh[i].name,
+			(distance / veh[i].speed));
+
+		printf("\t햇 수로는 %.2f년\n",
+			(distance / veh[i].speed)/(24*365));
+	}
 	return;
 }
 
@@ -131,15 +137,23 @@ void hw01_7() {
 	// a OR b  : 0b 1111 1010 1111 1111 = 0xFAFF
 	// a XOR b : 0b 1111 1010 1111 0101 = 0xFAF5
 	// NOT a   : 0b 0101 0101 0101 0101 = 0x5555
-	printf("a = %X\n", a);
-	printf("b = %X\n", b);
+	printf("a = %0X\n", a);
+	printf("b = %0X\n", b);
+
+	printf("sizeof a : %d\n", sizeof(a));
 
 	printf("Bitwise (a and b) : 0x%X\n", a & b);
+
+	printf("Sizeof (a and b) : %d\n", sizeof(a & b));
+
 	printf("Bitwise (a or b)  : 0x%X\n", a | b);
 	printf("Bitwise (a xor b) : 0x%X\n", a ^ b);
 	printf("Bitwise (~a) : 0x%X\n", ~a);
+
+	printf("Sizeof (~a) : %d\n", sizeof(~a));
 	return;
 }
+
 
 void hw01_8() {
 	int balance;
@@ -156,6 +170,29 @@ void hw01_8() {
 	}
 	printf("이다.\n");
 	return;
+}
+
+void printMatrix(char* units[], double mat[][9], int blockSize) {
+	double cell;
+	for (int row = 0; row < 9; row++) {
+		if (row == 0) {
+			printf("%*s ", blockSize, "");
+			for (int col = 0; col < 9; col++)
+				printf("%*s ", blockSize, units[col]);
+			printf("\n");
+		}
+		printf("1 %-*s ", blockSize, units[row]);
+		for (int col = 0; col < 9; col++) {
+			cell = mat[row][col];
+			if (cell == 1.L)
+				printf("%*d ", blockSize, 1);
+			else if (cell > 1.L)
+				printf("%*.*lf ", blockSize, 2, cell);
+			else
+				printf("%*.*lf ", blockSize, 8, cell);
+		}
+		printf("\n");
+	}
 }
 
 void hw01_9() {
@@ -187,13 +224,7 @@ void hw01_9() {
 		}
 	}
 
-	// Print table
-	for (row = 0; row < 9; row++) {
-		printf("1 %s\t", units[row]);
-		for (col = 0; col < 9; col++)
-			printf("%+15lf\t", data_table[row][col]);
-		printf("\n");
-	}
+	printMatrix(units, data_table, 12);
 	return;
 }
 
@@ -226,13 +257,7 @@ void hw01_10() {
 		}
 	}
 
-	// Print table
-	for (row = 0; row < 9; row++) {
-		printf("1 %s\t", units[row]);
-		for (col = 0; col < 9; col++)
-			printf("%+15lf\t", data_table[row][col]);
-		printf("\n");
-	}
+	printMatrix(units, data_table, 12);
 	return;
 }
 
@@ -249,7 +274,7 @@ int main() {
 		hw01_9,
 		hw01_10 };
 
-	for (int i = 8; i < 10; i++) {
+	for (int i = 0; i < 10; i++) {
 		printf("\n======== hw01-%d ========\n", i + 1);
 		funcList[i]();
 
