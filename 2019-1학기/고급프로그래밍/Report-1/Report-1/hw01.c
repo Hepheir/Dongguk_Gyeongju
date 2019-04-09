@@ -140,17 +140,10 @@ void hw01_7() {
 	printf("a = %0X\n", a);
 	printf("b = %0X\n", b);
 
-	printf("sizeof a : %d\n", sizeof(a));
-
 	printf("Bitwise (a and b) : 0x%X\n", a & b);
-
-	printf("Sizeof (a and b) : %d\n", sizeof(a & b));
-
 	printf("Bitwise (a or b)  : 0x%X\n", a | b);
 	printf("Bitwise (a xor b) : 0x%X\n", a ^ b);
 	printf("Bitwise (~a) : 0x%X\n", ~a);
-
-	printf("Sizeof (~a) : %d\n", sizeof(~a));
 	return;
 }
 
@@ -274,7 +267,7 @@ int main() {
 		hw01_9,
 		hw01_10 };
 
-	for (int i = 0; i < 10; i++) {
+	for (int i = 6; i < 10; i++) {
 		printf("\n======== hw01-%d ========\n", i + 1);
 		funcList[i]();
 
