@@ -1,0 +1,41 @@
+float x(int t);
+float y(int t);
+
+void hw03_4() {
+	int t, t2;
+	int t2_delay = 0;
+
+	unsigned char wasYfaster = 0; // Boolean
+	unsigned char isYfaster = 0; // Boolean
+
+	int cnt = 0;
+
+	for (t = 0, t2 = 0; t <= 60; t++) {
+		isYfaster = y(t) > x(t2);
+		if (isYfaster != wasYfaster)
+			cnt++;
+		wasYfaster = isYfaster;
+		printf("[%2d] x: %7.2f, y: %7.2f, cnt: %d\n", t, x(t2), y(t), cnt);
+
+
+		if (t2_delay) { // Waiting trigger.
+			t2_delay--;
+			if (!t2_delay)
+				t2++;
+		}
+		else {
+			if (t2 && !(t2 % 10)) // Every 10 secs, Waits for 5 secs. (Not inclusive of t2 equals 0)
+				t2_delay = 5;
+			else
+				t2++;
+		}
+	}
+}
+
+float x(int t) {
+	return 3.6F * t;
+}
+
+float y(int t) {
+	return 2.5F * t;
+}

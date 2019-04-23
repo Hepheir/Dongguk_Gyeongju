@@ -1,0 +1,3 @@
+﻿  hw03-4.c
+e:\git\clone repository\dongguk_gyeongju\2019-1학기\고급프로그래밍\report\report\hw03-4.c(18): warning C4013: 'printf'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+  Report.vcxproj -> E:\Git\clone repository\Dongguk_Gyeongju\2019-1학기\고급프로그래밍\Report\Debug\Report.exe
