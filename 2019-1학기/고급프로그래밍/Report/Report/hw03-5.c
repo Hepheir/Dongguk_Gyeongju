@@ -5,7 +5,7 @@ float d(float t);
 
 void hw03_5() {
 	for (float t = 0.F; t <= 60.F; t += 1.0F) {
-		printf("v=%f, d=%f\n", v(t), d(t));
+		printf("[%.0fÃÊ]\tv=%f, \td=%f\n", t, v(t), d(t));
 	}
 }
 

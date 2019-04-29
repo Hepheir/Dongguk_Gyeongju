@@ -1,11 +1,11 @@
-double hw03_1_operation(double x);
+int hw03_1_operation(int x);
 
 void hw03_1() {
-	double x, y;
-	double max_x, max_y;
+	int x, y;
+	int max_x, max_y;
 	
-	x = 0.F;
-	max_y = 0.F;
+	x = 0;
+	max_y = 0;
 
 	printf("y(x) = 36x - 2x^2\n");
 
@@ -16,17 +16,15 @@ void hw03_1() {
 			max_y = y;
 			max_x = x;
 		}
-
-		x += 0.001F;
+		x++;
 	}
-	while (y >= 0.F);
+	while (y >= 0);
 
-	printf("\t[Max @ (%lf, %lf)]\n", max_x, max_y);
+	printf("\n[Max @ (%d, %d)]\n", max_x, max_y);
 }
 
-double hw03_1_operation(double x) {
-	double y;
-	y = 36 * x - 2 * (x*x);
-	printf("\r>>> y(%6.2lf) = %.2lf", x, y);
+int hw03_1_operation(int x) {
+	int y = 36 * x - 2 * (x*x);
+	printf("\r>>> y(%d) = %d", x, y);
 	return y;
 }

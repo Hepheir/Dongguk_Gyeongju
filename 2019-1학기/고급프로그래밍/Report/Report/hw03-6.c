@@ -24,7 +24,7 @@ double slope_i4(Point_i4 a, Point_i4 b) {
 	double dx = a.x - b.x;
 	double dy = a.y - b.y;
 
-	return dx / dy;
+	return dy / dx;
 }
 
 double intercept_i4(Point_i4 a, Point_i4 b) {

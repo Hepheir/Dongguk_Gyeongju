@@ -7,20 +7,28 @@ void hw03_4() {
 
 	unsigned char wasYfaster = 0; // Boolean
 	unsigned char isYfaster = 0; // Boolean
+	unsigned char isYOvertake = 0; // Boolean
 
-	int cnt = 0;
+	int overtakes = 0;
 
 	for (t = 0; t <= 60; t++) {
 		isYfaster = y(t) > x(t - t_delay);
 
-		if (isYfaster && !wasYfaster)
-			cnt++;
+		isYOvertake = isYfaster && !wasYfaster;
 
-		wasYfaster = isYfaster;
-		printf("[%2d] x: %7.2f, y: %7.2f, cnt: %d\n", t, x(t - t_delay), y(t), cnt);
+		if (isYOvertake)
+			overtakes++;
+
+		printf("[%2d] x: %7.2f, y: %7.2f, overtakes: %d\n",
+			t,
+			x(t - t_delay),
+			y(t),
+			overtakes);
 
 		if (t && (t % 15 >= 10)) // Waiting trigger.
 			t_delay++;
+			
+		wasYfaster = isYfaster;
 	}
 }
 

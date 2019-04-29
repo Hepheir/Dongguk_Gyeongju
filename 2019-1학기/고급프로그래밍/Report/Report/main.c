@@ -32,9 +32,14 @@ void hw03_4();
 void hw03_5();
 void hw03_6();
 void hw03_7();
+void hw03_8();
+void hw03_9();
+void hw03_10();
+void hw03_11();
+void hw03_12();
 
 int main() {
-	hw03_7();
+	hw03_10();
 	system("pause");
 
 	return 0;

@@ -3,8 +3,8 @@ int hw03_3_LCM(int a, int b);
 
 void hw03_3() {
 	int a, b;
-	a = 20;
-	b = 30;
+	a = 8;
+	b = 10;
 	printf("LCM(%d, %d) = %d\n", a, b, hw03_3_LCM(a, b));
 }
 
