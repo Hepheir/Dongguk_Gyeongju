@@ -24,7 +24,7 @@ void hw02_6();
 void hw02_7();
 void hw02_8();
 
-// hw02
+// hw03
 void hw03_1();
 void hw03_2();
 void hw03_3();
@@ -38,8 +38,15 @@ void hw03_10();
 void hw03_11();
 void hw03_12();
 
+// hw02
+void hw04_1();
+void hw04_2();
+void hw04_3();
+void hw04_4();
+void hw04_5();
+
 int main() {
-	hw03_10();
+	hw04_1();
 	system("pause");
 
 	return 0;
