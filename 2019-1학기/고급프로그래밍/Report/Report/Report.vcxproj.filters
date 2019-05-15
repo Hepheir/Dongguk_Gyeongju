@@ -13,49 +13,133 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="소스 파일\hw01">
+      <UniqueIdentifier>{a8b72641-b1ff-45cb-99ae-eb66cac7ee14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\hw02">
+      <UniqueIdentifier>{8c6ab065-fbdc-454a-b35c-65e4ead855f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\hw03">
+      <UniqueIdentifier>{0c2ad4cc-96de-410a-a725-30a431385df6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\hw04">
+      <UniqueIdentifier>{b477b4d5-d6dd-48c3-ad7a-e2b59a94c44f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\hw05">
+      <UniqueIdentifier>{cf3cece5-d9f1-4b9f-8df2-4a9e5180c136}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="hw01.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="hw02-1.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="hw02-2.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="hw02-4.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="hw02-5.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="hw02-6.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="hw02-7.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="hw02-8.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="main.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="hw01.c">
+      <Filter>소스 파일\hw01</Filter>
+    </ClCompile>
+    <ClCompile Include="hw02-1.c">
+      <Filter>소스 파일\hw02</Filter>
+    </ClCompile>
+    <ClCompile Include="hw02-2.c">
+      <Filter>소스 파일\hw02</Filter>
+    </ClCompile>
     <ClCompile Include="hw02-3.c">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\hw02</Filter>
+    </ClCompile>
+    <ClCompile Include="hw02-4.c">
+      <Filter>소스 파일\hw02</Filter>
+    </ClCompile>
+    <ClCompile Include="hw02-5.c">
+      <Filter>소스 파일\hw02</Filter>
+    </ClCompile>
+    <ClCompile Include="hw02-6.c">
+      <Filter>소스 파일\hw02</Filter>
+    </ClCompile>
+    <ClCompile Include="hw02-7.c">
+      <Filter>소스 파일\hw02</Filter>
+    </ClCompile>
+    <ClCompile Include="hw02-8.c">
+      <Filter>소스 파일\hw02</Filter>
     </ClCompile>
     <ClCompile Include="hw03-1.c">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\hw03</Filter>
     </ClCompile>
     <ClCompile Include="hw03-2.c">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\hw03</Filter>
     </ClCompile>
     <ClCompile Include="hw03-3.c">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\hw03</Filter>
     </ClCompile>
     <ClCompile Include="hw03-4.c">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\hw03</Filter>
+    </ClCompile>
+    <ClCompile Include="hw03-5.c">
+      <Filter>소스 파일\hw03</Filter>
+    </ClCompile>
+    <ClCompile Include="hw03-6.c">
+      <Filter>소스 파일\hw03</Filter>
+    </ClCompile>
+    <ClCompile Include="hw03-7.c">
+      <Filter>소스 파일\hw03</Filter>
+    </ClCompile>
+    <ClCompile Include="hw03-8.c">
+      <Filter>소스 파일\hw03</Filter>
+    </ClCompile>
+    <ClCompile Include="hw03-9.c">
+      <Filter>소스 파일\hw03</Filter>
+    </ClCompile>
+    <ClCompile Include="hw03-10.c">
+      <Filter>소스 파일\hw03</Filter>
+    </ClCompile>
+    <ClCompile Include="hw03-11.c">
+      <Filter>소스 파일\hw03</Filter>
+    </ClCompile>
+    <ClCompile Include="hw03-12.c">
+      <Filter>소스 파일\hw03</Filter>
+    </ClCompile>
+    <ClCompile Include="hw04-1.c">
+      <Filter>소스 파일\hw04</Filter>
+    </ClCompile>
+    <ClCompile Include="hw04-2.c">
+      <Filter>소스 파일\hw04</Filter>
+    </ClCompile>
+    <ClCompile Include="hw04-3.c">
+      <Filter>소스 파일\hw04</Filter>
+    </ClCompile>
+    <ClCompile Include="hw04-4.c">
+      <Filter>소스 파일\hw04</Filter>
+    </ClCompile>
+    <ClCompile Include="hw04-5.c">
+      <Filter>소스 파일\hw04</Filter>
+    </ClCompile>
+    <ClCompile Include="hw05-1.c">
+      <Filter>소스 파일\hw05</Filter>
+    </ClCompile>
+    <ClCompile Include="hw05-8.c">
+      <Filter>소스 파일\hw05</Filter>
+    </ClCompile>
+    <ClCompile Include="hw05-2.c">
+      <Filter>소스 파일\hw05</Filter>
+    </ClCompile>
+    <ClCompile Include="hw05-3.c">
+      <Filter>소스 파일\hw05</Filter>
+    </ClCompile>
+    <ClCompile Include="hw05-4.c">
+      <Filter>소스 파일\hw05</Filter>
+    </ClCompile>
+    <ClCompile Include="hw05-5.c">
+      <Filter>소스 파일\hw05</Filter>
+    </ClCompile>
+    <ClCompile Include="hw05-6.c">
+      <Filter>소스 파일\hw05</Filter>
+    </ClCompile>
+    <ClCompile Include="hw05-7.c">
+      <Filter>소스 파일\hw05</Filter>
+    </ClCompile>
+    <ClCompile Include="hw05-9.c">
+      <Filter>소스 파일\hw05</Filter>
+    </ClCompile>
+    <ClCompile Include="hw05-10.c">
+      <Filter>소스 파일\hw05</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
