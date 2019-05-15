@@ -3,13 +3,12 @@
 void hw04_5() {
 	char *title[9] = {
 		"function",
+
 		"isalnum",
 		"isalpha",
-
 		"iscntrl",
 		"isdigit",
 		"isxdigit",
-
 		"ispunct",
 		"isprint",
 		"isspace"
@@ -19,11 +18,9 @@ void hw04_5() {
 		isalnum,
 		isalpha,
 		iscntrl,
-
 		isdigit,
 		isxdigit,
 		ispunct,
-
 		isprint,
 		isspace
 	};
@@ -33,7 +30,7 @@ void hw04_5() {
 	printf("\n");
 
 	for (int i = 0x00; i <= 0x7F; i++) {
-		printf("%0#4x     ", i);
+		printf("%0#4X     ", i);
 		for (int j = 0; j < 8; j++)
 			printf("%8d ", (*func[j])(i));
 		printf("\n");
