@@ -58,7 +58,7 @@ void hw05_9();
 void hw05_10();
 
 int main() {
-	hw05_5();
+	hw05_3();
 	system("pause");
 
 	return 0;
