@@ -151,7 +151,18 @@
     <ClCompile Include="hw05-8.c" />
     <ClCompile Include="hw05-7.c" />
     <ClCompile Include="hw05-9.c" />
+    <ClCompile Include="hw06-1.c" />
+    <ClCompile Include="hw06-2.c" />
+    <ClCompile Include="hw06-3.c" />
+    <ClCompile Include="hw06-4.c" />
+    <ClCompile Include="hw06-5.c" />
+    <ClCompile Include="hw06-6.c" />
+    <ClCompile Include="hw06-7.c" />
+    <ClCompile Include="hw06-8.c" />
     <ClCompile Include="main.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="user.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

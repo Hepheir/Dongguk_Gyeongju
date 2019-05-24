@@ -28,6 +28,9 @@
     <Filter Include="소스 파일\hw05">
       <UniqueIdentifier>{cf3cece5-d9f1-4b9f-8df2-4a9e5180c136}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\hw06">
+      <UniqueIdentifier>{4659beae-307d-49fe-92dd-b3abc5752fb5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
@@ -141,5 +144,34 @@
     <ClCompile Include="hw05-10.c">
       <Filter>소스 파일\hw05</Filter>
     </ClCompile>
+    <ClCompile Include="hw06-1.c">
+      <Filter>소스 파일\hw06</Filter>
+    </ClCompile>
+    <ClCompile Include="hw06-2.c">
+      <Filter>소스 파일\hw06</Filter>
+    </ClCompile>
+    <ClCompile Include="hw06-7.c">
+      <Filter>소스 파일\hw06</Filter>
+    </ClCompile>
+    <ClCompile Include="hw06-8.c">
+      <Filter>소스 파일\hw06</Filter>
+    </ClCompile>
+    <ClCompile Include="hw06-6.c">
+      <Filter>소스 파일\hw06</Filter>
+    </ClCompile>
+    <ClCompile Include="hw06-3.c">
+      <Filter>소스 파일\hw06</Filter>
+    </ClCompile>
+    <ClCompile Include="hw06-4.c">
+      <Filter>소스 파일\hw06</Filter>
+    </ClCompile>
+    <ClCompile Include="hw06-5.c">
+      <Filter>소스 파일\hw06</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="user.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

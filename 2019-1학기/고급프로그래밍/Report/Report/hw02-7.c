@@ -1,3 +1,6 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+
 void hw02_7() {
 	int n1, n2;
 	int sum;
