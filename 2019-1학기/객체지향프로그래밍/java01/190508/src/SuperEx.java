@@ -31,7 +31,6 @@ public class SuperEx {
 		// TODO Auto-generated method stub
 		ColorPoint cp = new ColorPoint(5, 6, "blue");
 		cp.showColorPoint();
-		System.out.println(Point.x);
 	}
 
 }
