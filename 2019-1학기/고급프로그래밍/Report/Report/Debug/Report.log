@@ -1,5 +1,2 @@
-﻿  hw05-3.c
-e:\git\clone repository\dongguk_gyeongju\2019-1학기\고급프로그래밍\report\report\hw05-3.c(9): error C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdlib.h(1323): note: 'itoa' 선언을 참조하십시오.
-  main.c
-  코드를 생성하고 있습니다...
+﻿  main.c
+  Report.vcxproj -> C:\Users\김동주\Desktop\Git\clone repository\Dongguk_Gyeongju\2019-1학기\고급프로그래밍\Report\Debug\Report.exe

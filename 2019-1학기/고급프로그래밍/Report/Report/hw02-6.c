@@ -1,3 +1,6 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+
 void hw02_6() {
 	int po2, po3; // product of 2 and 3
 	po2 = 0; po3 = 0;
