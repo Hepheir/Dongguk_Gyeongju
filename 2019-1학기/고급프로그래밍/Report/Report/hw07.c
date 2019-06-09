@@ -30,22 +30,47 @@ int hw07_2() {
 	union data v;
 	printf("%d\n", sizeof(union data));
 	v.ch = 'A';
-	printf("%d\n", sizeof(union data));
+	printf("%d\n", sizeof(v.ch));
 	v.n = 25;
 	printf("%d\n", sizeof(v.n));
 	return 0;
 }
 
+enum week {sun, mon, tue, wed, thu, fri, sat};
 void hw07_3() {
-	//
+	enum week day1;
+	day1 = fri;
+	printf("day1 : %d\n", day1);
+	printf("fri : %d\n", fri);
+	day1 = mon;
+	printf("day1 : %d\n", day1);
+	printf("mon : %d\n", mon);
 }
 
+enum prod { engine = 3, battery, filter, fuse };
 void hw07_4() {
-	//
+	enum prod v;
+	v = battery;
+	printf("장치번호 : %d\n", v);
+	printf("engine 번호 : %d\n", engine);
+	v = fuse;
+	printf("장치번호 : %d\n", v);
 }
 
+struct patient2 {
+	int age;
+	unsigned sex : 1;
+	unsigned drinking : 1;
+	unsigned smoking : 1;
+	unsigned pressure : 2;
+};
 void hw07_5() {
-	//
+	struct patient2 p1 = { 35,0,1,1,3 };
+	printf("age :%d\n", p1.age);
+	printf("sex :%d\n", p1.sex);
+	printf("drinking :%d\n", p1.drinking);
+	printf("smoking :%d\n", p1.smoking);
+	printf("blood pressure :%d\n", p1.pressure);
 }
 
 // hw07-6
@@ -59,10 +84,38 @@ struct patient {
 
 int hw07_6() {
 	struct patient a = { 24, 0, 1, 1, 0 };
-	printf("age :%d\n", a.age);
+
+	printf("age : %d\n", a.age);
 	printf("sex : %d\n", a.sex);
 	printf("drinking : %d\n", a.drinking);
 	printf("smoking : %d\n", a.smoking);
+
+	printf("\n\n\n");
+
+
+	printf("age :%d\n", a.age);
+	printf("sex : ");
+	if (a.sex)
+		printf("남자");
+	else
+		printf("여자");
+	printf("\ndrinking : ");
+	if (a.drinking)
+		printf("음주자");
+	else
+		printf("x");
+	printf("\nsmoking : ");
+	if (a.smoking)
+		printf("흡연자");
+	else
+		printf("x");
+	printf("\nmarriage : ");
+	if (a.marriage)
+		printf("기혼자");
+	else
+		printf("x");
+	printf("\n");
+
 	return 0;
 }
 /*
@@ -193,6 +246,19 @@ void hw07_8() {
 	printf("sizeof(struct customer) = %d\n", sizeof(struct customer));
 }
 
+struct heyo1 {
+	BYTE yo : 1;
+};
+struct heyo2 {
+	BYTE_2 yo : 1;
+};
+void hw07_8_1() {
+	printf("sizeof(byte) = %d\n", sizeof(BYTE));
+	printf("sizeof(short) = %d\n", sizeof(BYTE_2));
+	printf("sizeof(heyo_1byte) = %d\n", sizeof(struct heyo1));
+	printf("sizeof(heyo_2byte) = %d\n", sizeof(struct heyo2));
+}
+
 void hw07_9() {
 	struct patient {
 		char *name;
@@ -255,28 +321,30 @@ void hw07_9() {
 }
 
 
-union bank_account {
-	char A[8];
-	char B[11];
-	char C[13];
+union bank_num {
+	char n1[8];
+	char n2[11];
+	char n3[13];
 };
 
-void printRecord(union bank_account income, union bank_account outcome, int deposit);
+char bank_name(union bank_num acc);
 
 void hw07_10() {
-	union bank_account income, outcome;
-	int balance;
+	union bank_num income, outcome;
 
-	printf("출금 계좌번호 입력 : ");
-	scanf("%s", outcome.C);
 	printf("입금 계좌번호 입력 : ");
-	scanf("%s", income.C);
-	printf("옮길 금액 입력 : ");
-	scanf("%d", &balance);
+	scanf("%s", income.n3);
+	printf("출금 계좌번호 입력 : ");
+	scanf("%s", outcome.n3);
+
+	printf("입금 계좌\n");
+	printf(" 은행명 : %c, 계좌번호 : %s\n", bank_name(income), income.n3);
+	printf("출금 계좌\n");
+	printf(" 은행명 : %c, 계좌번호 : %s\n", bank_name(outcome), outcome.n3);
 }
 
-char bank_name(union bank_account acc) {
-	switch (strlen(acc.C))
+char bank_name(union bank_num acc) {
+	switch (strlen(acc.n3))
 	{
 	case 7:
 		return 'A';
@@ -287,9 +355,4 @@ char bank_name(union bank_account acc) {
 	default:
 		return 0;
 	}
-}
-
-void printRecord(union bank_account income, union bank_account outcome, int deposit) {
-	printf("%5s %15s %10s\n", "은행", "계좌번호", "금액");
-	printf("입금 은행 : %s \t");
 }

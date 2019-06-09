@@ -1,4 +1,12 @@
 class CRC { // CRC 자료형
+	CRC() {
+		this(0,0);
+	}
+	CRC(int val, int poly) {
+		this.value = val;
+		this.polynomial = poly;
+	}
+	
 	int value; // CRC 코드
 	int polynomial; // 사용된 CRC 발생 코드
 }
@@ -6,11 +14,13 @@ class CRC { // CRC 자료형
 public class CRC_Generator {
 	// 입력된 데이터를 CRC 코드로 변환해주는 메소드
 	public static CRC toCRC(int data, int polynomial) { // KHJ
-		int remainder = modulo_2_remainder(data, polynomial);
-		
+		int change = (data << getBitSize(polynomial) - 1);
+		int number = change | modulo_2_remainder(change, polynomial);
+		  
 		CRC crc = new CRC();
-		crc.value = (data << getBitSize(remainder)) | remainder;
+		crc.value = number;
 		crc.polynomial = polynomial;
+  
 		return crc;
 	}
 	
@@ -23,10 +33,9 @@ public class CRC_Generator {
 	
 	// CRC 오류 검사를 하는 메소드
 	public static boolean hasError(CRC crc) { // KHJ
-		if (modulo_2_remainder(crc.value, crc.polynomial) == 0)
-			return false;
-		else
+		if (modulo_2_remainder(crc.value, crc.polynomial) != 0)
 			return true;
+		return false;
 	}
 	
 	// 모듈로-2 연산의 나머지를 반환하는 메소드
@@ -36,7 +45,7 @@ public class CRC_Generator {
 		int pivot, pin;
 		
 		// Operate modulo-2.
-		for (pivot = data_bitlen-1; pivot > poly_bitlen-1; pivot--) {
+		for (pivot = data_bitlen-1; pivot >= poly_bitlen-1; pivot--) {
 			// pass if MSB equals 0
 			if (getBit(data, pivot) == 0)
 				continue;
@@ -53,7 +62,7 @@ public class CRC_Generator {
 	}
 	
 	// 2진수에서의 길이 구하기
-	public static int getBitSize(int x) {
+	public static int getBitSize(int x) { // KDJ
 		final int SIZE_OF_INT = 32;
 		for (int i = SIZE_OF_INT-1; i >= 0; i--)
 			if (getBit(x, i) == 1)
@@ -62,67 +71,57 @@ public class CRC_Generator {
 	}
 	
 	// 특정 자릿수의 비트를 가져오는 메소드
-	public static int getBit(int x, int index) {
-		if ((x & (1 << index)) != 0)
-			return 1;
-		return 0;
+	public static int getBit(int x, int index) { // KDJ
+		return (x >>> index) & 1;
 	}
 
 	// 입력된 정수를 2진수로 출력하는 메소드
-	public static void printBit(int x) {
+	public static String bin2String(int x) { // KDJ
+		return bin2String(x, false, false);
+	}
+	
+	public static String bin2String(int x, boolean spacing, boolean printZeros) { // KDJ
 		final int SIZE_OF_INT = 32;
-		for (int i = SIZE_OF_INT-1; i >= 0; i--) {
+		int length = SIZE_OF_INT-1;
+		String binaryString = "";
+		
+		if (!printZeros)
+			length = getBitSize(x)-1;
+		
+		for (int i = length; i >= 0; i--) {
 			if (getBit(x, i) == 0)
-				System.out.print(0);
+				binaryString += "0";
 			else
-				System.out.print(1);
-			if (i % 8 == 0)
-				System.out.print(" ");
+				binaryString += "1";
+			if (spacing && i % 8 == 0)
+				binaryString += " ";
 		}
-		System.out.println();
+		return binaryString;
 	}
 	
+	// 2진수 다항식을 문자열로 입력받아 정수로 해석해주는 메소드
 	public static int parsePolynomial(String polyString) { // KOH
-		// formated "3*x^3+x^2+1*x+3"
-		int poly = 0;
-		boolean hasCoeff, hasExp;
-		int exp;
-		
-		// 다항식을 단항식들의 배열로 분리하여, 각 단항식을 해석
-		String[] products = polyString.split("\\+");
-		for (String prod : products) {
-			// 계수가 있는지 검사
-			hasCoeff = prod.contains("*");
-			if (hasCoeff && Integer.parseInt(prod.split("\\*")[0]) % 2 == 0)
-				continue; // 계수가 0이면 넘어감
-			
-			// 차수 알아내기
-			hasExp = prod.contains("^");
-			if (!hasExp) { // 차수가 생략 되었을 경우, x^0 혹은 x^1
-				exp = prod.contains("x") ? 1 : 0;
+		int num, row, sum = 1, total = 0;
+		  
+		String result[] = polyString.split("(x\\^)|\\+");
+		  
+		for (int i = 0; i < result.length; i += 2)
+		{
+			sum = 0;
+			num = Integer.parseInt(result[i]);
+			row = Integer.parseInt(result[i + 1]);
+			System.out.printf("num : %d, row : %d, ", num, row);
+			if (num != 0)
+			{
+				sum = 1;
+				for (int j = 0; j < row; j++)
+				{
+					sum = sum * 2;
+				}
 			}
-			else {
-				exp = Integer.parseInt(prod.split("\\^")[1]);
-			}
-			// 차수에 해당하는 비트를 1로 바꿈.
-			poly |= (1 << exp);
+			total += sum;
+			System.out.printf("total : %d\n", total);
 		}
-		return poly;
-	}
-	
-	public static void main(String [] args) {
-		int data = 0b11111010000; // 예시 데이터
-		int poly = 0b1001; // 예시 CRC 발생 코드
-		CRC_Generator crcGen = new CRC_Generator();
-		CRC crc = new CRC();
-		crc = crcGen.toCRC(data, poly);
-		
-		crcGen.printBit(data);
-		crcGen.printBit(crc.value);
-		System.out.println(crcGen.hasError(crc));
-		crcGen.printBit(crcGen.fromCRC(crc));
-		
-		int newPoly = crcGen.parsePolynomial("x^10+3*x^4+1+x+0*x^2+4*x^9");
-		crcGen.printBit(newPoly);
+		return total;
 	}
 }
