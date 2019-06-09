@@ -2,70 +2,17 @@
 #include <stdio.h>
 #include <Windows.h>
 
-// hw01
-void hw01_1();
-void hw01_2();
-void hw01_3();
-void hw01_4();
-void hw01_5();
-void hw01_6();
-void hw01_7();
-void hw01_8();
-void hw01_9();
-void hw01_10();
+#include "hw01.h"
+#include "hw02.h"
+#include "hw03.h"
+#include "hw04.h"
+#include "hw05.h"
+#include "hw06.h"
+#include "hw07.h"
 
-// hw02
-void hw02_1();
-void hw02_2();
-void hw02_3();
-void hw02_4();
-void hw02_5();
-void hw02_6();
-void hw02_7();
-void hw02_8();
-
-// hw03
-void hw03_1();
-void hw03_2();
-void hw03_3();
-void hw03_4();
-void hw03_5();
-void hw03_6();
-void hw03_7();
-void hw03_8();
-void hw03_9();
-void hw03_10();
-void hw03_11();
-void hw03_12();
-
-// hw04
-void hw04_1();
-void hw04_2();
-void hw04_3();
-void hw04_4();
-void hw04_5();
-
-// hw05
-void hw05_1();
-void hw05_2();
-void hw05_3();
-void hw05_4();
-void hw05_5();
-void hw05_6();
-void hw05_7();
-void hw05_8();
-void hw05_9();
-void hw05_10();
-
-// hw06
-void hw06_1();
-void hw06_2();
-void hw06_6();
-void hw06_7();
-void hw06_8();
-
+void hw07_8_1();
 int main() {
-	hw06_8();
+	hw07_8_1();
 	system("pause");
 
 	return 0;

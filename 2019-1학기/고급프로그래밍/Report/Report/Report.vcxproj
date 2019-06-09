@@ -116,26 +116,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="hw01.c" />
-    <ClCompile Include="hw02-1.c" />
-    <ClCompile Include="hw02-2.c" />
-    <ClCompile Include="hw02-3.c" />
-    <ClCompile Include="hw02-4.c" />
-    <ClCompile Include="hw02-5.c" />
-    <ClCompile Include="hw02-6.c" />
-    <ClCompile Include="hw02-7.c" />
-    <ClCompile Include="hw02-8.c" />
-    <ClCompile Include="hw03-1.c" />
-    <ClCompile Include="hw03-10.c" />
-    <ClCompile Include="hw03-11.c" />
-    <ClCompile Include="hw03-12.c" />
-    <ClCompile Include="hw03-2.c" />
-    <ClCompile Include="hw03-3.c" />
-    <ClCompile Include="hw03-4.c" />
-    <ClCompile Include="hw03-5.c" />
-    <ClCompile Include="hw03-6.c" />
-    <ClCompile Include="hw03-7.c" />
-    <ClCompile Include="hw03-8.c" />
-    <ClCompile Include="hw03-9.c" />
+    <ClCompile Include="hw02.c" />
+    <ClCompile Include="hw03.c" />
     <ClCompile Include="hw04-1.c" />
     <ClCompile Include="hw04-2.c" />
     <ClCompile Include="hw04-3.c" />
@@ -159,9 +141,17 @@
     <ClCompile Include="hw06-6.c" />
     <ClCompile Include="hw06-7.c" />
     <ClCompile Include="hw06-8.c" />
+    <ClCompile Include="hw07.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="hw01.h" />
+    <ClInclude Include="hw02.h" />
+    <ClInclude Include="hw03.h" />
+    <ClInclude Include="hw04.h" />
+    <ClInclude Include="hw05.h" />
+    <ClInclude Include="hw06.h" />
+    <ClInclude Include="hw07.h" />
     <ClInclude Include="user.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
