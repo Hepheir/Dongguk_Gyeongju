@@ -142,6 +142,8 @@
     <ClCompile Include="hw06-7.c" />
     <ClCompile Include="hw06-8.c" />
     <ClCompile Include="hw07.c" />
+    <ClCompile Include="hw08.c" />
+    <ClCompile Include="hw09.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>
@@ -152,6 +154,7 @@
     <ClInclude Include="hw05.h" />
     <ClInclude Include="hw06.h" />
     <ClInclude Include="hw07.h" />
+    <ClInclude Include="hw08.h" />
     <ClInclude Include="user.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

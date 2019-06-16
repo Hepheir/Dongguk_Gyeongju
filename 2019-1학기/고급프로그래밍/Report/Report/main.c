@@ -9,10 +9,10 @@
 #include "hw05.h"
 #include "hw06.h"
 #include "hw07.h"
+#include "hw08.h"
 
-void hw07_8_1();
 int main() {
-	hw07_8_1();
+	hw08_10();
 	system("pause");
 
 	return 0;
