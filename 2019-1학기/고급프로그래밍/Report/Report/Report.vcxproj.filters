@@ -108,6 +108,12 @@
     <ClCompile Include="hw07.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="hw08.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="hw09.c">
+      <Filter>소스 파일\hw06</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="user.h">
@@ -132,6 +138,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="hw07.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="hw08.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
