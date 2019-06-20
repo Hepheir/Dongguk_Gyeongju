@@ -1,1 +1,3 @@
-// hw09-11은 36대신 35번 할 것. 시험문제 각임.
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>

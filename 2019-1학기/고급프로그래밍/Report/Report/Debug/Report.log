@@ -1,1 +1,6 @@
-﻿  Report.vcxproj -> C:\Users\김동주\Desktop\Git\clone repository\Dongguk_Gyeongju\2019-1학기\고급프로그래밍\Report\Debug\Report.exe
+﻿  hw08.c
+e:\git\clone repository\dongguk_gyeongju\2019-1학기\고급프로그래밍\report\report\hw08.c(114): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+e:\git\clone repository\dongguk_gyeongju\2019-1학기\고급프로그래밍\report\report\hw08.c(115): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+e:\git\clone repository\dongguk_gyeongju\2019-1학기\고급프로그래밍\report\report\hw08.c(116): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+e:\git\clone repository\dongguk_gyeongju\2019-1학기\고급프로그래밍\report\report\hw08.c(184): warning C4013: 'time'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+  Report.vcxproj -> E:\Git\clone repository\Dongguk_Gyeongju\2019-1학기\고급프로그래밍\Report\Debug\Report.exe
